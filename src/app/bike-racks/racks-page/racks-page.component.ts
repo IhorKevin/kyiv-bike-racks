@@ -7,12 +7,41 @@ import {Component, OnInit} from '@angular/core';
 })
 export class RacksPageComponent implements OnInit {
 
-    latitude: number = 50.449834;
-    longitude: number = 30.523799;
+    mapCenter: {
+        latitude: number;
+        longitude: number;
+    };
+    zoom: number = 15;
+    maxZoom: number = 21;
+    minZoom: number = 11;
 
-    constructor() { }
+    private readonly initialKyivCoords = {
+        latitude: 50.449834,
+        longitude: 30.523799
+    };
+
+    constructor() {
+        this.mapCenter = this.initialKyivCoords;
+    }
 
     ngOnInit() {
+        this.centerMapToUserPosition();
+    }
+
+    centerMapToUserPosition(): void {
+        if(navigator.geolocation) {
+            const onSuccess = position => {
+                this.mapCenter = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+            
+            };
+            const onReject = () => {
+                this.mapCenter = this.initialKyivCoords;
+            };
+            navigator.geolocation.getCurrentPosition(onSuccess, onReject);
+        }
     }
 
 }

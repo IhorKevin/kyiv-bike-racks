@@ -1,3 +1,10 @@
-<agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="16" [streetViewControl]="false" class="map-container">
-    <!-- <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker> -->
+<agm-map
+    [latitude]="mapCenter.latitude"
+    [longitude]="mapCenter.longitude"
+    [minZoom]="minZoom"
+    [maxZoom]="maxZoom"
+    [zoom]="zoom"
+    [streetViewControl]="false"
+    class="map-container"
+>
 </agm-map>
