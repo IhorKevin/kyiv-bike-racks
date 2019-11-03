@@ -7,6 +7,9 @@ import {Component, OnInit} from '@angular/core';
 })
 export class RacksPageComponent implements OnInit {
 
+    latitude: number = 50.449834;
+    longitude: number = 30.523799;
+
     constructor() { }
 
     ngOnInit() {

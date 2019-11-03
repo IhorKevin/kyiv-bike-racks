@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AgmCoreModule } from '@agm/core';
 
 import { BikeRacksRoutingModule } from './bike-racks-routing.module';
 import { RacksPageComponent } from './racks-page/racks-page.component';
@@ -9,7 +10,8 @@ import { RacksPageComponent } from './racks-page/racks-page.component';
     declarations: [RacksPageComponent],
     imports: [
         CommonModule,
-        BikeRacksRoutingModule
+        BikeRacksRoutingModule,
+        AgmCoreModule
     ]
 })
 export class BikeRacksModule { }
