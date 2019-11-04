@@ -8,18 +8,16 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBbP5iLdeUARlMMLUaU9MNs6Tres9S6USA'
-    })
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        AgmCoreModule.forRoot({ apiKey: environment.agmApiKey })
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
