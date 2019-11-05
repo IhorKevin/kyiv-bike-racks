@@ -7,4 +7,5 @@
     [streetViewControl]="false"
     class="map-container"
 >
+    <agm-marker *ngFor="let rack of racks" [latitude]="rack.latitude" [longitude]="rack.longitude" [label]="rack.name || rack.capacity.toString()"></agm-marker>
 </agm-map>

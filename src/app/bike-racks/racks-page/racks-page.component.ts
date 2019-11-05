@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {BikeRack} from "../bike-rack";
+import {data} from "../racks-data";
 
 @Component({
     selector: 'app-racks-page',
@@ -15,6 +17,8 @@ export class RacksPageComponent implements OnInit {
     maxZoom: number = 21;
     minZoom: number = 11;
 
+    racks: BikeRack[];
+
     private readonly initialKyivCoords = {
         latitude: 50.449834,
         longitude: 30.523799
@@ -22,6 +26,7 @@ export class RacksPageComponent implements OnInit {
 
     constructor() {
         this.mapCenter = this.initialKyivCoords;
+        this.racks = data;
     }
 
     ngOnInit() {
@@ -35,7 +40,6 @@ export class RacksPageComponent implements OnInit {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 };
-            
             };
             const onReject = () => {
                 this.mapCenter = this.initialKyivCoords;
