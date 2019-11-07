@@ -1,10 +1,13 @@
 <google-map
+    #googleMap
     class="map-container"
-    [center]="mapCenter"
     [zoom]="zoom"
     [options]="mapOptions"
     [width]="'inherit'"
     [height]="'inherit'"
 >
     <map-marker *ngFor="let rack of racks" [position]="{lat: rack.latitude, lng: rack.longitude}" [label]="rack.name || rack.capacity.toString()"></map-marker>
+    <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
 </google-map>
+
+<button class="position-button" type="button" (click)="centerMapToUserPosition()">GEO</button>
