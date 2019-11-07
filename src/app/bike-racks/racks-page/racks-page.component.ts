@@ -9,19 +9,22 @@ import {data} from "../racks-data";
 })
 export class RacksPageComponent implements OnInit {
 
-    mapCenter: {
-        latitude: number;
-        longitude: number;
-    };
+    mapCenter: google.maps.LatLngLiteral;
     zoom: number = 15;
-    maxZoom: number = 21;
-    minZoom: number = 11;
+    mapOptions: google.maps.MapOptions = {
+        minZoom: 11,
+        maxZoom: 21,
+        streetViewControl: false,
+        fullscreenControl: false,
+        panControl: false,
+        mapTypeControl: false
+    };
 
     racks: BikeRack[];
 
-    private readonly initialKyivCoords = {
-        latitude: 50.449834,
-        longitude: 30.523799
+    private readonly initialKyivCoords: google.maps.LatLngLiteral = {
+        lat: 50.449834,
+        lng: 30.523799
     };
 
     constructor() {
@@ -37,8 +40,8 @@ export class RacksPageComponent implements OnInit {
         if(navigator.geolocation) {
             const onSuccess = position => {
                 this.mapCenter = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
                 };
             };
             const onReject = () => {

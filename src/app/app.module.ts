@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AgmCoreModule } from '@agm/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,8 +13,7 @@ import { environment } from '../environments/environment';
     imports: [
         BrowserModule,
         AppRoutingModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        AgmCoreModule.forRoot({ apiKey: environment.agmApiKey })
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     providers: [],
     bootstrap: [AppComponent]
