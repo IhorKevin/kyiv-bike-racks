@@ -5,9 +5,22 @@
     [options]="mapOptions"
     [width]="'inherit'"
     [height]="'inherit'"
+    (mapClick)="clearRack()"
 >
-    <map-marker *ngFor="let rack of racks" [position]="{lat: rack.latitude, lng: rack.longitude}" [label]="rack.name || rack.capacity.toString()"></map-marker>
+    <map-marker
+        *ngFor="let rack of racks"
+        [position]="{lat: rack.latitude, lng: rack.longitude}"
+        [label]="rack.name || rack.capacity.toString()"
+        (mapClick)="onRackSelect(rack)"
+    ></map-marker>
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
 </google-map>
 
 <button class="position-button" type="button" (click)="centerMapToUserPosition()">GEO</button>
+
+<div *ngIf="selectedRack as r" class="rack-details">
+    <h1>{{r.name}}</h1>
+    <div class="rack-details__img-container">
+        <img class="rack-details__img" src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg" alt="">
+    </div>
+</div>

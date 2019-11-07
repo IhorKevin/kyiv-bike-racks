@@ -21,6 +21,7 @@ export class RacksPageComponent implements OnInit {
     };
 
     racks: BikeRack[];
+    selectedRack: BikeRack;
 
     @ViewChild('googleMap', {read: GoogleMap}) mapRef: GoogleMap;
 
@@ -65,6 +66,18 @@ export class RacksPageComponent implements OnInit {
             };
             navigator.geolocation.getCurrentPosition(onSuccess, onReject);
         }
+    }
+
+    onRackSelect(rack: BikeRack): void {
+        this.selectedRack = rack;
+        this.mapRef.panTo({
+            lat: rack.latitude,
+            lng: rack.longitude
+        });
+    }
+
+    clearRack(): void {
+        this.selectedRack = null;
     }
 
 }
