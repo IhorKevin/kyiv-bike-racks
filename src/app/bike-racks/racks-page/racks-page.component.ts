@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
 import {BikeRack} from "../bike-rack";
 import {data} from "../racks-data";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
     selector: 'app-racks-page',
@@ -33,7 +34,7 @@ export class RacksPageComponent implements OnInit {
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
 
-    constructor() {
+    constructor(private auth: AuthService) {
         this.mapOptions = {
             center: this.KyivCenterCoords,
             minZoom: this.minZoom,
@@ -78,6 +79,10 @@ export class RacksPageComponent implements OnInit {
 
     clearRack(): void {
         this.selectedRack = null;
+    }
+
+    login(): void {
+        this.auth.login().then(credentials => console.log('AUTH', credentials));
     }
 
 }

@@ -17,6 +17,7 @@
 </google-map>
 
 <button class="position-button" type="button" (click)="centerMapToUserPosition()">GEO</button>
+<button class="login-button" type="button" (click)="login()">Login with Google</button>
 
 <div *ngIf="selectedRack as r" class="rack-details">
     <h1>{{r.name}}</h1>

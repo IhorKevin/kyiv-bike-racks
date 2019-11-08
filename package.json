@@ -17,6 +17,7 @@
     "@angular/common": "~9.0.0-rc.0",
     "@angular/compiler": "~9.0.0-rc.0",
     "@angular/core": "~9.0.0-rc.0",
+    "@angular/fire": "^5.2.1",
     "@angular/forms": "~9.0.0-rc.0",
     "@angular/google-maps": "^9.0.0-rc.0",
     "@angular/platform-browser": "~9.0.0-rc.0",
@@ -24,6 +25,7 @@
     "@angular/pwa": "^0.803.17",
     "@angular/router": "~9.0.0-rc.0",
     "@angular/service-worker": "~9.0.0-rc.0",
+    "firebase": "^7.3.0",
     "rxjs": "~6.5.3",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
