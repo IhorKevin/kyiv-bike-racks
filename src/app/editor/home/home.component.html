@@ -1,1 +1,10 @@
 <button type="button" routerLink="./create">New rack</button>
+
+<div>
+    <label>
+        Image
+        <input #fileInput type="file" accept=".jpg" (change)="onFileInputChange(fileInput)">
+    </label>
+    <progress *ngIf="uploadPercent" max="100" [value]="uploadPercent"></progress>
+</div>
+<button type="button" (click)="upload()">Upload Image</button>
