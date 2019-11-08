@@ -8,7 +8,7 @@
     (mapClick)="clearRack()"
 >
     <map-marker
-        *ngFor="let rack of racks"
+        *ngFor="let rack of racks | async"
         [position]="{lat: rack.latitude, lng: rack.longitude}"
         [label]="rack.name || rack.capacity.toString()"
         (mapClick)="onRackSelect(rack)"

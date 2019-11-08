@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Observable} from "rxjs";
 import {BikeRack} from "../bike-rack";
-import {data} from "../racks-data";
 import {AuthService} from "../../auth/auth.service";
 
 @Component({
@@ -21,7 +22,7 @@ export class RacksPageComponent implements OnInit {
         visible: true
     };
 
-    racks: BikeRack[];
+    racks: Observable<BikeRack[]>;
     selectedRack: BikeRack;
 
     @ViewChild('googleMap', {read: GoogleMap}) mapRef: GoogleMap;
@@ -34,7 +35,7 @@ export class RacksPageComponent implements OnInit {
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
 
-    constructor(private auth: AuthService) {
+    constructor(private auth: AuthService, private fs: AngularFirestore) {
         this.mapOptions = {
             center: this.KyivCenterCoords,
             minZoom: this.minZoom,
@@ -44,11 +45,10 @@ export class RacksPageComponent implements OnInit {
             panControl: false,
             mapTypeControl: false
         };
-        this.racks = data;
+        this.racks = this.fs.collection<BikeRack>('/racks').valueChanges();
     }
 
     ngOnInit() {
-
     }
 
     centerMapToUserPosition(): void {
