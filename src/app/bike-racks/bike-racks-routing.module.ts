@@ -4,7 +4,7 @@ import {RacksPageComponent} from './racks-page/racks-page.component';
 
 
 const routes: Routes = [{
-    path: '',
+    path: 'racks',
     component: RacksPageComponent
 }];
 

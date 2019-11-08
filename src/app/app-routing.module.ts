@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
     {
-        path: 'racks',
-        loadChildren: () => import('./bike-racks/bike-racks.module').then(m => m.BikeRacksModule)
+        path: 'editor',
+        loadChildren: () => import('./editor/editor.module').then(m => m.EditorModule)
     },
     {
         path: '',

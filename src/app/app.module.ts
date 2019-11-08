@@ -1,13 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {AngularFireModule, FirebaseOptions} from '@angular/fire';
+import { AngularFireModule, FirebaseOptions } from '@angular/fire';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import {AngularFireAuthModule} from "@angular/fire/auth";
-import {AngularFirestoreModule} from "@angular/fire/firestore";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { BikeRacksModule } from "./bike-racks/bike-racks.module";
 
 const fireConfig: FirebaseOptions = {
     apiKey: "AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI",
@@ -28,8 +28,8 @@ const fireConfig: FirebaseOptions = {
         AppRoutingModule,
         AngularFireModule.initializeApp(fireConfig),
         AngularFireAuthModule,
-        AngularFirestoreModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+        BikeRacksModule
     ],
     providers: [],
     bootstrap: [AppComponent]

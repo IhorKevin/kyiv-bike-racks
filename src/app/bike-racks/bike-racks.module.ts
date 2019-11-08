@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { GoogleMapsModule } from '@angular/google-maps'
 
 import { BikeRacksRoutingModule } from './bike-racks-routing.module';
 import { RacksPageComponent } from './racks-page/racks-page.component';
+import { SharedModule } from "../shared/shared.module";
 
 
 @NgModule({
     declarations: [RacksPageComponent],
     imports: [
-        CommonModule,
-        BikeRacksRoutingModule,
-        GoogleMapsModule
+        SharedModule,
+        BikeRacksRoutingModule
     ]
 })
 export class BikeRacksModule { }

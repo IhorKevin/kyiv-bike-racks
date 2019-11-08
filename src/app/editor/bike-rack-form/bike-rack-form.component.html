@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <div>
+        <label>
+            Широта
+            <input type="number" formControlName="latitude">
+        </label>
+    </div>
+    <div>
+        <label>
+            Довгота
+            <input type="number" formControlName="longitude">
+        </label>
+    </div>
+    <div>
+        <label>
+            Назва
+            <input type="text" formControlName="name">
+        </label>
+    </div>
+    <div>
+        <label>
+            Ємність
+            <input type="number" formControlName="capacity">
+        </label>
+    </div>
+    <button type="submit">Save</button>
+</form>

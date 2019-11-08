@@ -45,10 +45,11 @@ export class RacksPageComponent implements OnInit {
             panControl: false,
             mapTypeControl: false
         };
-        this.racks = this.fs.collection<BikeRack>('/racks').valueChanges();
+        this.racks = this.fs.collection<BikeRack>('/racks').valueChanges({idField: 'id'});
     }
 
     ngOnInit() {
+        this.racks.subscribe(result => console.log(result));
     }
 
     centerMapToUserPosition(): void {
