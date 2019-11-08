@@ -9,7 +9,7 @@
 >
     <map-marker
         *ngFor="let rack of racks | async"
-        [position]="{lat: rack.latitude, lng: rack.longitude}"
+        [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
         [label]="rack.name || rack.capacity.toString()"
         (mapClick)="onRackSelect(rack)"
     ></map-marker>

@@ -73,8 +73,8 @@ export class RacksPageComponent implements OnInit {
     onRackSelect(rack: BikeRack): void {
         this.selectedRack = rack;
         this.mapRef.panTo({
-            lat: rack.latitude,
-            lng: rack.longitude
+            lat: rack.coords.latitude,
+            lng: rack.coords.longitude
         });
     }
 

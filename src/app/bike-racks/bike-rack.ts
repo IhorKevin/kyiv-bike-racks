@@ -1,7 +1,8 @@
+import { firestore } from 'firebase/app';
+
 export interface BikeRack {
     id?: string;
     name?: string;
-    latitude: number;
-    longitude: number;
+    coords: firestore.GeoPoint;
     capacity?: number;
 }
