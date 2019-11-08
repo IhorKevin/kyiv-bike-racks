@@ -1,6 +1,16 @@
 {
   "name": "kyiv-bike-racks",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "author": {
+    "name": "Ihor Ivanov",
+    "email": "ihorkevin@gmail.com",
+    "url": "https://fb.com/ihorkevin"
+  },  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IhorKevin/kyiv-bike-racks.git"
+  },
+  "description": "Map of locations where you can park a bike in Kyiv",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -51,5 +61,9 @@
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
     "typescript": "~3.6.4"
-  }
+  },
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 6.0.0"
+  }  
 }
