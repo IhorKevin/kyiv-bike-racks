@@ -22,7 +22,7 @@
     </button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item>Item 1</button>
-        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor">Додати велопарковку</a>
+        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor/create">Додати велопарковку</a>
         <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Log out</button>
     </mat-menu>
     <div></div>

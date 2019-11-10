@@ -31,6 +31,10 @@ export class BikeRackFormComponent implements OnInit {
         }
     }
 
+    cancel(): void {
+        this.router.navigate(['/racks']);
+    }
+
     private buildForm(): void {
         this.form = this.fb.group({
             name: '',
