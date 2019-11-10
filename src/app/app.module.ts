@@ -9,6 +9,7 @@ import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BikeRacksModule } from "./bike-racks/bike-racks.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const fireConfig: FirebaseOptions = {
     apiKey: "AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI",
@@ -31,7 +32,8 @@ const fireConfig: FirebaseOptions = {
         AngularFireAuthModule,
         AngularFireAuthGuardModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-        BikeRacksModule
+        BikeRacksModule,
+        BrowserAnimationsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

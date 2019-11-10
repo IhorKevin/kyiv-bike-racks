@@ -16,16 +16,29 @@
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
 </google-map>
 
-<button class="position-button" type="button" (click)="centerMapToUserPosition()">GEO</button>
-<a *ngIf="isLoggedIn | async" routerLink="/editor" class="editor-button">EDITOR</a>
-<button *ngIf="isLoggedIn | async; else loginButton" class="login-button" type="button" (click)="logout()">Log out</button>
-<ng-template #loginButton>
-    <button class="login-button" type="button" (click)="login()">Login with Google</button>
-</ng-template>
-
-<div *ngIf="selectedRack as r" class="rack-details">
-    <h1>{{r.name}}</h1>
-    <div class="rack-details__img-container">
-        <img class="rack-details__img" src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg" alt="">
-    </div>
+<div class="menu-button">
+    <button mat-raised-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>Item 1</button>
+        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor">Add bike rack</a>
+        <button mat-menu-item *ngIf="isLoggedIn | async; else loginButton" type="button" (click)="logout()">Log out</button>
+    </mat-menu>
+    <ng-template #loginButton>
+        <button mat-menu-item type="button" (click)="login()">Login with Google</button>
+    </ng-template>
+    <div></div>
+    <button mat-fab color="primary"  type="button" (click)="centerMapToUserPosition()">
+        <mat-icon>my_location</mat-icon>
+    </button>
 </div>
+
+<mat-card class="rack-details" *ngIf="selectedRack as r">
+    <img mat-card-image src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-header>
+        <mat-card-title>{{r.name}}</mat-card-title>
+        <mat-card-subtitle>{{r.coords.latitude}}, {{r.coords.longitude}}</mat-card-subtitle>
+    </mat-card-header>
+</mat-card>
+      

@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 
