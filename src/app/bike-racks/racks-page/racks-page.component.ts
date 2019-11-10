@@ -84,10 +84,6 @@ export class RacksPageComponent implements OnInit {
         this.selectedRack = null;
     }
 
-    login(): void {
-        this.auth.login().then(credentials => console.log('AUTH', credentials));
-    }
-
     logout(): void {
         this.auth.logout().then(() => this.mapRef.panTo({lat: this.KyivCenterCoords.lat, lng: this.KyivCenterCoords.lng}));
     }

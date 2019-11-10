@@ -22,12 +22,9 @@
     </button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item>Item 1</button>
-        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor">Add bike rack</a>
-        <button mat-menu-item *ngIf="isLoggedIn | async; else loginButton" type="button" (click)="logout()">Log out</button>
+        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor">Додати велопарковку</a>
+        <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Log out</button>
     </mat-menu>
-    <ng-template #loginButton>
-        <button mat-menu-item type="button" (click)="login()">Login with Google</button>
-    </ng-template>
     <div></div>
     <button mat-fab color="primary"  type="button" (click)="centerMapToUserPosition()">
         <mat-icon>my_location</mat-icon>
