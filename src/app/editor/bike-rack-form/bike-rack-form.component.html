@@ -12,9 +12,15 @@
     <mat-form-field>
         <input matInput type="number" placeholder="Ємність" formControlName="capacity">
     </mat-form-field>
+    <div class="bike-rack-form__photo" (click)="fileInput.click()">
+        <mat-icon>add_a_photo</mat-icon>
+    </div>
+    <p *ngIf="previewSrc">{{previewSrc}}</p>
+    <input type="file" hidden #fileInput (change)="onFileChange(fileInput)">
+    <mat-progress-bar *ngIf="uploadPercent" mode="determinate" [value]="uploadPercent"></mat-progress-bar>
     <div class="bike-rack-form__actions">
-        <button mat-button type="button" (click)="cancel()">Скасувати</button>
-        <button mat-raised-button color="primary" type="submit">Зберегти</button>
+        <button mat-button type="button" (click)="cancel()" [disabled]="uploadPercent">Скасувати</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="uploadPercent">Зберегти</button>
     </div>
 
 </form>

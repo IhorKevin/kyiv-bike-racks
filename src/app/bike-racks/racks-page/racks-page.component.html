@@ -1,11 +1,10 @@
 <google-map
-    #googleMap
     class="map-container"
     [zoom]="zoom"
     [options]="mapOptions"
     [width]="'inherit'"
     [height]="'inherit'"
-    (mapClick)="clearRack()"
+    (mapClick)="clearRack($event)"
 >
     <map-marker
         *ngFor="let rack of racks | async"
@@ -32,7 +31,7 @@
 </div>
 
 <mat-card class="rack-details" *ngIf="selectedRack as r">
-    <img mat-card-image src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg" alt="Photo of a Shiba Inu">
+    <img mat-card-image [src]="r.photo ? r.photo : 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg'" alt="Photo of a Shiba Inu">
     <mat-card-header>
         <mat-card-title>{{r.name}}</mat-card-title>
         <mat-card-subtitle>{{r.coords.latitude}}, {{r.coords.longitude}}</mat-card-subtitle>

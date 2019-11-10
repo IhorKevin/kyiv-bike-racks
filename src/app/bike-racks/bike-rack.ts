@@ -5,4 +5,5 @@ export interface BikeRack {
     name?: string;
     coords: firestore.GeoPoint;
     capacity?: number;
+    photo?: string;
 }

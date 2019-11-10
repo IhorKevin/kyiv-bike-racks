@@ -26,7 +26,7 @@ export class RacksPageComponent implements OnInit {
     selectedRack: BikeRack;
     isLoggedIn: Observable<boolean>;
 
-    @ViewChild('googleMap', {read: GoogleMap}) mapRef: GoogleMap;
+    @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     private readonly KyivCenterCoords: google.maps.LatLngLiteral = {
         lat: 50.449834,
@@ -80,16 +80,12 @@ export class RacksPageComponent implements OnInit {
         });
     }
 
-    clearRack(): void {
+    clearRack(event: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
         this.selectedRack = null;
     }
 
     logout(): void {
         this.auth.logout().then(() => this.mapRef.panTo({lat: this.KyivCenterCoords.lat, lng: this.KyivCenterCoords.lng}));
-    }
-
-    getUsers(): void {
-        this.fs.collection('authentication').valueChanges().subscribe(value => console.log(value));
     }
 
 }
