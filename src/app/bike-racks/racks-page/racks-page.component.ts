@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 
@@ -24,6 +25,7 @@ export class RacksPageComponent implements OnInit {
 
     racks: Observable<BikeRack[]>;
     selectedRack: BikeRack;
+    isLoggedIn: Observable<boolean>;
 
     @ViewChild('googleMap', {read: GoogleMap}) mapRef: GoogleMap;
 
@@ -46,6 +48,7 @@ export class RacksPageComponent implements OnInit {
             mapTypeControl: false
         };
         this.racks = this.fs.collection<BikeRack>('/racks').valueChanges({idField: 'id'});
+        this.isLoggedIn = this.auth.isAuthenticated();
     }
 
     ngOnInit() {
@@ -84,6 +87,14 @@ export class RacksPageComponent implements OnInit {
 
     login(): void {
         this.auth.login().then(credentials => console.log('AUTH', credentials));
+    }
+
+    logout(): void {
+        this.auth.logout().then(() => this.mapRef.panTo({lat: this.KyivCenterCoords.lat, lng: this.KyivCenterCoords.lng}));
+    }
+
+    getUsers(): void {
+        this.fs.collection('authentication').valueChanges().subscribe(value => console.log(value));
     }
 
 }

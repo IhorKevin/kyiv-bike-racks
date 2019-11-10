@@ -5,6 +5,7 @@ import { AngularFireModule, FirebaseOptions } from '@angular/fire';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';        
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BikeRacksModule } from "./bike-racks/bike-racks.module";
@@ -28,6 +29,7 @@ const fireConfig: FirebaseOptions = {
         AppRoutingModule,
         AngularFireModule.initializeApp(fireConfig),
         AngularFireAuthModule,
+        AngularFireAuthGuardModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         BikeRacksModule
     ],

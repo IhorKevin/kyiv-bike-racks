@@ -17,8 +17,11 @@
 </google-map>
 
 <button class="position-button" type="button" (click)="centerMapToUserPosition()">GEO</button>
-<a routerLink="/editor" class="editor-button">EDITOR</a>
-<button class="login-button" type="button" (click)="login()">Login with Google</button>
+<a *ngIf="isLoggedIn | async" routerLink="/editor" class="editor-button">EDITOR</a>
+<button *ngIf="isLoggedIn | async; else loginButton" class="login-button" type="button" (click)="logout()">Log out</button>
+<ng-template #loginButton>
+    <button class="login-button" type="button" (click)="login()">Login with Google</button>
+</ng-template>
 
 <div *ngIf="selectedRack as r" class="rack-details">
     <h1>{{r.name}}</h1>
