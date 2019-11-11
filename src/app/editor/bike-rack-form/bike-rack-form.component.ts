@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {Router} from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {GoogleMap} from "@angular/google-maps";
+import {Subject} from "rxjs";
+import {debounceTime, takeUntil} from "rxjs/operators";
 import { firestore } from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
 import {GeoService} from "../../services";
@@ -13,13 +16,19 @@ import {GeoService} from "../../services";
     templateUrl: './bike-rack-form.component.html',
     styleUrls: ['./bike-rack-form.component.styl']
 })
-export class BikeRackFormComponent implements OnInit {
+export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     uploadPercent: number;
     previewSrc: string;
-    userPosition: Position;
+    mapCenter: google.maps.LatLngLiteral;
+    mapOptions: google.maps.MapOptions;
+    position: Position;
     private file: File;
+    private rackLocation: Subject<google.maps.LatLng>;
+    private destroy: Subject<void>;
+
+    @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     constructor(
         private fb: FormBuilder,
@@ -28,9 +37,22 @@ export class BikeRackFormComponent implements OnInit {
         private router: Router,
         private snackBar: MatSnackBar,
         private geoService: GeoService
-    ) { }
+    ) {
+        this.mapOptions = {
+            center: GeoService.KyivCenterCoords,
+            minZoom: 11,
+            maxZoom: 19,
+            streetViewControl: false,
+            fullscreenControl: false,
+            panControl: false,
+            mapTypeControl: false
+        };
+        this.rackLocation = new Subject();
+        this.destroy = new Subject();
+    }
 
     ngOnInit() {
+
         this.updateUserPosition();
         this.buildForm();
         const geocoder = new google.maps.Geocoder();
@@ -38,6 +60,11 @@ export class BikeRackFormComponent implements OnInit {
             console.log('RESULTS', results);
             console.log('STATUS', status);
         };
+    }
+
+    ngOnDestroy(): void {
+        this.destroy.next();
+        this.destroy.complete();
     }
 
     submit(): void {
@@ -79,12 +106,23 @@ export class BikeRackFormComponent implements OnInit {
         }
     }
 
+    updateLocation(): void {
+        if(!this.form || !this.mapRef) return;
+        this.rackLocation.next(this.mapRef.getCenter());
+    }
+
     private updateUserPosition(): void {
         this.geoService.getUserPosition()
-            .then(position => this.userPosition = position)
+            .then(position => {
+                this.position = position;
+                this.mapCenter = {
+                    lat: this.position.coords.latitude,
+                    lng: this.position.coords.longitude
+                };
+            })
             .catch(error => {
                 this.snackBar.open(error, 'OK', {duration: 3000});
-                this.userPosition = null;
+                this.position = null;
             });
     }
 
@@ -103,6 +141,14 @@ export class BikeRackFormComponent implements OnInit {
             ])],
             capacity: [0, Validators.min(0)]
         });
+
+        this.rackLocation
+            .asObservable()
+            .pipe(debounceTime(300), takeUntil(this.destroy))
+            .subscribe(center => {
+                this.form.get('latitude').patchValue(center.lat());
+                this.form.get('longitude').patchValue(center.lng());
+            });
     }
 
     private create(rack: BikeRack): void {

@@ -39,7 +39,7 @@ export class RacksPageComponent implements OnInit {
             maxZoom: this.maxZoom,
             streetViewControl: false,
             fullscreenControl: false,
-            panControl: false,
+            panControl: true,
             mapTypeControl: false
         };
         this.racks = this.fs.collection<BikeRack>('/racks').valueChanges({idField: 'id'});

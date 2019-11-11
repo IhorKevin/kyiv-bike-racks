@@ -1,14 +1,16 @@
 <h1>Нова велопарковка</h1>
 <form class="bike-rack-form" [formGroup]="form" (ngSubmit)="submit()">
-    <google-map>
-        
-    </google-map>
-    <mat-form-field>
-        <input matInput type="number" placeholder="Широта" formControlName="latitude">
-    </mat-form-field>
-    <mat-form-field>
-        <input matInput type="number" placeholder="Довгота" formControlName="longitude">
-    </mat-form-field>
+    <div class="bike-rack-form__map-holder">
+        <google-map
+            class="bike-rack-form__map"
+            [zoom]="17"
+            [options]="mapOptions"
+            [width]="'inherit'"
+            [height]="'inherit'"
+            (centerChanged)="updateLocation()"
+        ></google-map>
+        <div class="bike-rack-form__pointer"></div>
+    </div>
     <mat-form-field>
         <input matInput placeholder="Назва" formControlName="name">
     </mat-form-field>
