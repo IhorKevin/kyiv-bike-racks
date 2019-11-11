@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
@@ -11,7 +11,7 @@ import {GeoService} from "../../services";
     templateUrl: './racks-page.component.html',
     styleUrls: ['./racks-page.component.styl']
 })
-export class RacksPageComponent implements OnInit, AfterViewInit {
+export class RacksPageComponent implements OnInit {
 
     userPosition: Position;
     zoom: number = 15;
@@ -45,8 +45,9 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             maxZoom: this.maxZoom,
             streetViewControl: false,
             fullscreenControl: false,
-            panControl: true,
-            mapTypeControl: false
+            panControl: false,
+            mapTypeControl: false,
+            zoomControl: false
         };
         this.racks = this.fs.collection<BikeRack>('/racks').valueChanges({idField: 'id'});
         this.isLoggedIn = this.auth.isAuthenticated();
@@ -54,12 +55,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.racks.subscribe(result => console.log(result));
-    }
-
-    ngAfterViewInit(): void {
-        // todo: need improvement
-        const button = document.getElementById('location-button');
-        this.mapRef.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
     }
 
     centerMapToUserPosition(): void {

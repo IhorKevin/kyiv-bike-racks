@@ -6,9 +6,6 @@
     [height]="'inherit'"
     (mapClick)="clearRack($event)"
 >
-    <button id="location-button" class="mat-elevation-z2 location-button" mat-mini-fab color="" type="button" (click)="centerMapToUserPosition()">
-        <mat-icon>my_location</mat-icon>
-    </button>
     <map-marker
         *ngFor="let rack of racks | async"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
@@ -37,3 +34,6 @@
     </mat-card-header>
 </mat-card>
 
+<button class="mat-elevation-z2 location-button" mat-mini-fab color="" type="button" (click)="centerMapToUserPosition()">
+    <mat-icon>my_location</mat-icon>
+</button>
