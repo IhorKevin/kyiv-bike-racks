@@ -9,7 +9,7 @@
     <map-marker
         *ngFor="let rack of racks | async"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
-        [label]="rack.name || rack.capacity.toString()"
+        [options]="rackMarkerOptions"
         (mapClick)="onRackSelect(rack)"
     ></map-marker>
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
@@ -37,4 +37,10 @@
         <mat-card-subtitle>{{r.coords.latitude}}, {{r.coords.longitude}}</mat-card-subtitle>
     </mat-card-header>
 </mat-card>
-      
+
+<ng-template #locationBtn>
+    <button mat-fab color="primary"  type="button" (click)="centerMapToUserPosition()">
+        <mat-icon>my_location</mat-icon>
+    </button>
+</ng-template>
+
