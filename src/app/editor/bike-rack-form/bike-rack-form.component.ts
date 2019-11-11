@@ -1,20 +1,30 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {Router} from "@angular/router";
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {GoogleMap} from "@angular/google-maps";
 import {Subject} from "rxjs";
 import {debounceTime, takeUntil} from "rxjs/operators";
-import { firestore } from 'firebase/app';
+import {firestore} from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
 import {GeoService} from "../../services";
 
 @Component({
     selector: 'app-bike-rack-form',
     templateUrl: './bike-rack-form.component.html',
-    styleUrls: ['./bike-rack-form.component.styl']
+    styleUrls: ['./bike-rack-form.component.styl'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BikeRackFormComponent implements OnInit, OnDestroy {
 
@@ -28,6 +38,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     private rackLocation: Subject<google.maps.LatLng>;
     private destroy: Subject<void>;
 
+    @Input() rack: BikeRack;
+    @Output() save: EventEmitter<BikeRack>;
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     constructor(
@@ -47,14 +59,14 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             panControl: false,
             mapTypeControl: false
         };
+        this.save = new EventEmitter();
         this.rackLocation = new Subject();
         this.destroy = new Subject();
     }
 
     ngOnInit() {
-
         this.updateUserPosition();
-        this.buildForm();
+        this.buildForm(this.rack);
         const geocoder = new google.maps.Geocoder();
         const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
             console.log('RESULTS', results);
@@ -75,7 +87,9 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                 coords: new firestore.GeoPoint(this.form.value.latitude, this.form.value.longitude)
             };
             if(this.file) {
-                const path: string = `/racks-photo/${this.file.name}`;
+                const extension = this.file.name.split('.').pop() || '.jpg';
+                const name = `${payload.coords.latitude}_${payload.coords.longitude}`;
+                const path: string = `/racks-photo/original/${name}.${extension}`;
                 const task: AngularFireUploadTask = this.firestorage.upload(path, this.file);
                 task.percentageChanges().subscribe(percentage => this.uploadPercent = percentage);
                 task.then(snapshot => {
@@ -83,11 +97,11 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                     this.file = null;
                     snapshot.ref.getDownloadURL().then(url => {
                         payload.photo = url;
-                        this.create(payload);
+                        this.save.emit(payload);
                     });
                 });
             }
-            else this.create(payload);
+            else this.save.emit(payload);
         }
     }
 
@@ -98,7 +112,11 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     onFileChange(input: HTMLInputElement): void {
         if(input.files.length) {
             this.file = input.files.item(0);
-            this.previewSrc = this.file.name;
+            const reader = new FileReader();
+            reader.addEventListener('load', event => {
+                this.previewSrc = event.target.result.toString();
+            });
+            reader.readAsDataURL(this.file);
         }
         else {
             this.file = null;
@@ -126,20 +144,20 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    private buildForm(): void {
+    private buildForm(r: BikeRack): void {
         this.form = this.fb.group({
-            name: '',
-            latitude: [50.449834, Validators.compose([
+            name: r.name,
+            latitude: [r.coords.latitude, Validators.compose([
                 Validators.required,
                 Validators.min(-90),
                 Validators.max(90)
             ])],
-            longitude: [30.523799, Validators.compose([
+            longitude: [r.coords.latitude, Validators.compose([
                 Validators.required,
                 Validators.min(-180),
                 Validators.max(180)
             ])],
-            capacity: [0, Validators.min(0)]
+            capacity: [r.capacity || 0, Validators.min(0)]
         });
 
         this.rackLocation
@@ -149,20 +167,6 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                 this.form.get('latitude').patchValue(center.lat());
                 this.form.get('longitude').patchValue(center.lng());
             });
-    }
-
-    private create(rack: BikeRack): void {
-        this.fs.collection<BikeRack>('/racks')
-            .add(rack)
-            .then(result => {
-                console.log('SAVED ITEM', result);
-                this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks']);
-            })
-            .catch(error => {
-                console.log('ERROR HAPPEN', error);
-                this.snackBar.open(error, 'OK', {duration: 3000});
-            })
     }
 
 }

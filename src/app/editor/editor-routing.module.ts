@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {BikeRackFormComponent} from "./bike-rack-form/bike-rack-form.component";
 import {HomeComponent} from "./home/home.component";
+import {CreatePageComponent} from "./create-page/create-page.component";
+import {EditPageComponent} from "./edit-page/edit-page.component";
 
 
 const routes: Routes = [
@@ -12,7 +13,11 @@ const routes: Routes = [
     },
     {
         path: 'create',
-        component: BikeRackFormComponent
+        component: CreatePageComponent
+    },
+    {
+        path: 'edit/:id',
+        component: EditPageComponent
     }
 ];
 

@@ -1,4 +1,4 @@
-<h1>Нова велопарковка</h1>
+
 <form class="bike-rack-form" [formGroup]="form" (ngSubmit)="submit()">
     <div class="bike-rack-form__map-holder">
         <google-map
@@ -20,7 +20,7 @@
     <div class="bike-rack-form__photo" (click)="fileInput.click()">
         <mat-icon>add_a_photo</mat-icon>
     </div>
-    <p *ngIf="previewSrc">{{previewSrc}}</p>
+    <img *ngIf="previewSrc" class="bike-rack-form__preview" [src]="previewSrc" alt="">
     <input type="file" hidden #fileInput (change)="onFileChange(fileInput)">
     <mat-progress-bar *ngIf="uploadPercent" mode="determinate" [value]="uploadPercent"></mat-progress-bar>
     <div class="bike-rack-form__actions">
