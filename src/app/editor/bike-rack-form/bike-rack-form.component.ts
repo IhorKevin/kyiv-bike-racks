@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firestore } from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
+import {GeoService} from "../../services";
 
 @Component({
     selector: 'app-bike-rack-form',
@@ -17,6 +18,7 @@ export class BikeRackFormComponent implements OnInit {
     form: FormGroup;
     uploadPercent: number;
     previewSrc: string;
+    userPosition: Position;
     private file: File;
 
     constructor(
@@ -24,10 +26,12 @@ export class BikeRackFormComponent implements OnInit {
         private fs: AngularFirestore,
         private firestorage: AngularFireStorage,
         private router: Router,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private geoService: GeoService
     ) { }
 
     ngOnInit() {
+        this.updateUserPosition();
         this.buildForm();
         const geocoder = new google.maps.Geocoder();
         const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
@@ -73,6 +77,15 @@ export class BikeRackFormComponent implements OnInit {
             this.file = null;
             this.previewSrc = null;
         }
+    }
+
+    private updateUserPosition(): void {
+        this.geoService.getUserPosition()
+            .then(position => this.userPosition = position)
+            .catch(error => {
+                this.snackBar.open(error, 'OK', {duration: 3000});
+                this.userPosition = null;
+            });
     }
 
     private buildForm(): void {

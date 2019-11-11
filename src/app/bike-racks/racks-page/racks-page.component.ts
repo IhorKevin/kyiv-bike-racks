@@ -4,6 +4,7 @@ import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
+import {GeoService} from "../../services";
 
 @Component({
     selector: 'app-racks-page',
@@ -28,17 +29,12 @@ export class RacksPageComponent implements OnInit {
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
-    private readonly KyivCenterCoords: google.maps.LatLngLiteral = {
-        lat: 50.449834,
-        lng: 30.523799
-    };
-
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
 
-    constructor(private auth: AuthService, private fs: AngularFirestore) {
+    constructor(private auth: AuthService, private fs: AngularFirestore, private geoService: GeoService) {
         this.mapOptions = {
-            center: this.KyivCenterCoords,
+            center: GeoService.KyivCenterCoords,
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
             streetViewControl: false,
@@ -55,21 +51,22 @@ export class RacksPageComponent implements OnInit {
     }
 
     centerMapToUserPosition(): void {
-        if(navigator.geolocation) {
-            const onSuccess = position => {
-                this.mapRef.panTo({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                });
-                this.mapRef.zoom = this.maxZoom;
-                this.userPosition = position;
-            };
-            const onReject = () => {
-                this.mapRef.panTo(this.KyivCenterCoords);
-                this.userPosition = null;
-            };
-            navigator.geolocation.getCurrentPosition(onSuccess, onReject);
-        }
+        const onSuccess = position => {
+            this.mapRef.panTo({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+            this.mapRef.zoom = this.maxZoom;
+            this.userPosition = position;
+        };
+        const onReject = () => {
+            this.mapRef.panTo(GeoService.KyivCenterCoords);
+            this.userPosition = null;
+        };
+        this.geoService
+            .getUserPosition()
+            .then(onSuccess)
+            .catch(onReject);
     }
 
     onRackSelect(rack: BikeRack): void {
@@ -85,7 +82,7 @@ export class RacksPageComponent implements OnInit {
     }
 
     logout(): void {
-        this.auth.logout().then(() => this.mapRef.panTo({lat: this.KyivCenterCoords.lat, lng: this.KyivCenterCoords.lng}));
+        this.auth.logout().then(() => this.mapRef.panTo({lat: GeoService.KyivCenterCoords.lat, lng: GeoService.KyivCenterCoords.lng}));
     }
 
 }
