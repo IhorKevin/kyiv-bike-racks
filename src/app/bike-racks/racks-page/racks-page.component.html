@@ -6,6 +6,9 @@
     [height]="'inherit'"
     (mapClick)="clearRack($event)"
 >
+    <button id="location-button" class="mat-elevation-z2 location-button" mat-mini-fab color="" type="button" (click)="centerMapToUserPosition()">
+        <mat-icon>my_location</mat-icon>
+    </button>
     <map-marker
         *ngFor="let rack of racks | async"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
@@ -24,10 +27,6 @@
         <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor/create">Додати велопарковку</a>
         <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Log out</button>
     </mat-menu>
-    <div></div>
-    <button mat-fab color="primary"  type="button" (click)="centerMapToUserPosition()">
-        <mat-icon>my_location</mat-icon>
-    </button>
 </div>
 
 <mat-card class="rack-details" *ngIf="selectedRack as r">
@@ -37,10 +36,4 @@
         <mat-card-subtitle>{{r.coords.latitude}}, {{r.coords.longitude}}</mat-card-subtitle>
     </mat-card-header>
 </mat-card>
-
-<ng-template #locationBtn>
-    <button mat-fab color="primary"  type="button" (click)="centerMapToUserPosition()">
-        <mat-icon>my_location</mat-icon>
-    </button>
-</ng-template>
 

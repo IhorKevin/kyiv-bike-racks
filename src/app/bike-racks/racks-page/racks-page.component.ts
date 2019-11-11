@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
@@ -11,7 +11,7 @@ import {GeoService} from "../../services";
     templateUrl: './racks-page.component.html',
     styleUrls: ['./racks-page.component.styl']
 })
-export class RacksPageComponent implements OnInit {
+export class RacksPageComponent implements OnInit, AfterViewInit {
 
     userPosition: Position;
     zoom: number = 15;
@@ -53,6 +53,12 @@ export class RacksPageComponent implements OnInit {
 
     ngOnInit() {
         this.racks.subscribe(result => console.log(result));
+    }
+
+    ngAfterViewInit(): void {
+        // todo: need improvement
+        const button = document.getElementById('location-button');
+        this.mapRef.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(button);
     }
 
     centerMapToUserPosition(): void {
