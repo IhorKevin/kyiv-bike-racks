@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {Router} from "@angular/router";
-import {BikeRack} from "../../bike-racks";
-import { firestore } from 'firebase/app';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { firestore } from 'firebase/app';
+import {BikeRack} from "../../bike-racks";
 
 @Component({
     selector: 'app-bike-rack-form',
@@ -104,19 +104,6 @@ export class BikeRackFormComponent implements OnInit {
                 console.log('ERROR HAPPEN', error);
                 this.snackBar.open(error, 'OK', {duration: 3000});
             })
-    }
-
-    private upload(): void {
-        if(this.file) {
-            const path: string = `/racks-photo/${this.file.name}`;
-            const task: AngularFireUploadTask = this.firestorage.upload(path, this.file);
-            task.percentageChanges().subscribe(percentage => this.uploadPercent = percentage);
-            task.then(snapshot => {
-                this.uploadPercent = null;
-                this.file = null;
-                snapshot.ref.getDownloadURL().then(url => console.log('IMAGE', url));
-            });
-        }
     }
 
 }

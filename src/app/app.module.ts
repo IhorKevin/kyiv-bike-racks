@@ -1,15 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFireModule, FirebaseOptions } from '@angular/fire';
-
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
 import { AngularFireAuthModule } from "@angular/fire/auth";
-import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';        
+import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BikeRacksModule } from "./bike-racks/bike-racks.module";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule } from './auth/auth.module';
 
 const fireConfig: FirebaseOptions = {

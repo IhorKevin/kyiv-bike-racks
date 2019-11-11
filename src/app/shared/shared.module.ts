@@ -12,6 +12,17 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
+const materialComponents = [
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatCardModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
+    MatProgressBarModule
+];
+
 @NgModule({
     declarations: [],
     imports: [],
@@ -20,14 +31,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         AngularFirestoreModule,
         AngularFireAuthModule,
         GoogleMapsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatMenuModule,
-        MatCardModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatSnackBarModule,
-        MatProgressBarModule
+        ...materialComponents
     ]
 })
 export class SharedModule { }

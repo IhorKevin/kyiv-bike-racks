@@ -1,24 +1,35 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import { AuthService } from '../auth.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.styl']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.styl']
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private auth: AuthService, private router: Router, private ngZone: NgZone) { }
+    constructor(
+        private auth: AuthService,
+        private router: Router,
+        private ngZone: NgZone,
+        private snackBar: MatSnackBar
+    ) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  login(): void {
-    this.auth.login().then(credentials => {
-      console.log('AUTH', credentials);
-      this.ngZone.run(() => this.router.navigate(['/racks']));
-    });
-  }
+    login(): void {
+        const onSuccess = () => this.ngZone.run(() => this.router.navigate(['/racks']));
+        const onError = (error) => {
+            console.log('LOGIN ERROR', error);
+            this.snackBar.open(error, 'OK', {duration: 3000});
+        };
+        this.auth
+            .login()
+            .then(onSuccess)
+            .catch(onError);
+    }
 
 }
