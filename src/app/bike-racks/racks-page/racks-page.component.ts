@@ -19,8 +19,9 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     mapOptions: google.maps.MapOptions;
 
     userMarkerOptions: google.maps.MarkerOptions = {
-        icon: '/assets/map-markers/user-dot.svg',
-        visible: true
+        icon: '/assets/map-markers/user-location.svg',
+        visible: true,
+        clickable: false
     };
 
     rackMarkerOptions: google.maps.MarkerOptions = {

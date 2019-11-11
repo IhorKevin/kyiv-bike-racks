@@ -5,7 +5,10 @@ import {RacksPageComponent} from './racks-page/racks-page.component';
 
 const routes: Routes = [{
     path: 'racks',
-    component: RacksPageComponent
+    component: RacksPageComponent,
+    data: {
+        title: 'Карта'
+    }
 }];
 
 @NgModule({

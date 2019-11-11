@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {firestore} from 'firebase/app';
-import {Title} from "@angular/platform-browser";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AngularFirestore} from "@angular/fire/firestore";
@@ -18,7 +17,6 @@ export class CreatePageComponent implements OnInit {
 
     constructor(
         private geoService: GeoService,
-        private title: Title,
         private snackBar: MatSnackBar,
         private router: Router,
         private firestore: AngularFirestore
@@ -37,8 +35,6 @@ export class CreatePageComponent implements OnInit {
                     coords: new firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng)
                 };
             });
-
-        this.title.setTitle('Нова велопарковка');
     }
 
     save(rack: BikeRack): void {

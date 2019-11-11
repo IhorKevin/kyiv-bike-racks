@@ -1,5 +1,7 @@
 import {Component, OnInit, HostBinding} from '@angular/core';
 import {Title} from "@angular/platform-browser";
+import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
+import {filter, map} from "rxjs/operators";
 
 @Component({
     selector: 'app-root',
@@ -8,13 +10,23 @@ import {Title} from "@angular/platform-browser";
 })
 export class AppComponent implements OnInit {
 
-    title = 'Велопарковки Києва';
+    title: string = 'Велопарковки Києва';
 
     @HostBinding('class') className = 'mat-typography';
 
-    constructor(private titleService: Title) {}
+    constructor(private titleService: Title, private router: Router, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-        this.titleService.setTitle(this.title);
+        this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .pipe(map(() => this.route))
+            .subscribe(route => {
+                while (route.firstChild) {
+                    route = route.firstChild;
+                }
+                const pageTitle = route.snapshot.data.title;
+                const title = pageTitle ? `${pageTitle} | ${this.title}` : this.title;
+                this.titleService.setTitle(title);
+            });
     }
 }

@@ -13,11 +13,17 @@ const routes: Routes = [
     },
     {
         path: 'create',
-        component: CreatePageComponent
+        component: CreatePageComponent,
+        data: {
+            title: 'Нова велопарковка'
+        }
     },
     {
         path: 'edit/:id',
-        component: EditPageComponent
+        component: EditPageComponent,
+        data: {
+            title: 'Редагування'
+        }
     }
 ];
 

@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
@@ -9,7 +10,6 @@ import {
     ViewChild
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AngularFirestore} from "@angular/fire/firestore";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {Router} from "@angular/router";
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -26,7 +26,7 @@ import {GeoService} from "../../services";
     styleUrls: ['./bike-rack-form.component.styl'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BikeRackFormComponent implements OnInit, OnDestroy {
+export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form: FormGroup;
     uploadPercent: number;
@@ -44,7 +44,6 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private fb: FormBuilder,
-        private fs: AngularFirestore,
         private firestorage: AngularFireStorage,
         private router: Router,
         private snackBar: MatSnackBar,
@@ -65,13 +64,19 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.updateUserPosition();
         this.buildForm(this.rack);
         const geocoder = new google.maps.Geocoder();
         const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
             console.log('RESULTS', results);
             console.log('STATUS', status);
         };
+    }
+
+    ngAfterViewInit(): void {
+        this.mapRef.panTo({
+            lat: this.rack.coords.latitude,
+            lng: this.rack.coords.longitude
+        });
     }
 
     ngOnDestroy(): void {
@@ -103,6 +108,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             }
             else this.save.emit(payload);
         }
+        else this.form.markAllAsTouched();
     }
 
     cancel(): void {
