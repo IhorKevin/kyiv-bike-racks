@@ -92,4 +92,11 @@ export class RacksPageComponent implements OnInit {
         this.auth.logout().then(() => this.mapRef.panTo({lat: GeoService.KyivCenterCoords.lat, lng: GeoService.KyivCenterCoords.lng}));
     }
 
+    useCompressedImage(src: string): string {
+        if(src) {
+            return src.replace('original', '1280');
+        }
+        else return 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg';
+    }
+
 }
