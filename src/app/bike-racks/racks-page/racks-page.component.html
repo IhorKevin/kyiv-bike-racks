@@ -30,10 +30,10 @@
     <img mat-card-image [src]="useCompressedImage(r.photo)" alt="Фото велопарковки">
     <mat-card-header>
         <mat-card-title>{{r.name}}</mat-card-title>
-        <mat-card-subtitle>{{r.coords.latitude}}, {{r.coords.longitude}}</mat-card-subtitle>
+        <mat-card-subtitle>{{r.created_at?.toDate()}}</mat-card-subtitle>
     </mat-card-header>
 </mat-card>
 
-<button class="mat-elevation-z2 location-button" mat-mini-fab color="" type="button" (click)="centerMapToUserPosition()">
+<button class="mat-elevation-z2 location-button" mat-fab color="" type="button" (click)="centerMapToUserPosition()">
     <mat-icon>my_location</mat-icon>
 </button>

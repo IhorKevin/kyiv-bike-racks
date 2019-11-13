@@ -8,24 +8,34 @@
             [width]="'inherit'"
             [height]="'inherit'"
             (centerChanged)="updateLocation()"
+            [draggable]="!isDisabled"
         ></google-map>
         <div class="bike-rack-form__pointer"></div>
     </div>
-    <mat-form-field>
-        <input matInput placeholder="Назва" formControlName="name">
-    </mat-form-field>
-    <mat-form-field>
-        <input matInput type="number" placeholder="Ємність" formControlName="capacity">
-    </mat-form-field>
     <div class="bike-rack-form__photo" (click)="fileInput.click()">
         <mat-icon>add_a_photo</mat-icon>
     </div>
-    <img *ngIf="previewSrc" class="bike-rack-form__preview" [src]="previewSrc" alt="">
-    <input type="file" hidden #fileInput (change)="onFileChange(fileInput)">
-    <mat-progress-bar *ngIf="uploadPercent" mode="determinate" [value]="uploadPercent"></mat-progress-bar>
+    <img *ngIf="previewSrc | async as src" class="bike-rack-form__preview" [src]="src" alt="">
+    <input type="file" hidden #fileInput (change)="onFileChange(fileInput)" accept="image/jpeg">
+    <mat-form-field>
+        <input matInput placeholder="Назва" formControlName="name">
+    </mat-form-field>
+    <div>
+        <mat-form-field class="bike-rack-form__capacity">
+            <input matInput type="number" placeholder="Ємність" formControlName="capacity">
+        </mat-form-field>
+        <button mat-icon-button type="button" (click)="decrementCapacity()">
+            <mat-icon>remove</mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="incrementCapacity()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <mat-progress-bar *ngIf="uploadPercent | async as percent" mode="determinate" [value]="percent"></mat-progress-bar>
     <div class="bike-rack-form__actions">
-        <button mat-button type="button" (click)="cancel()" [disabled]="uploadPercent">Скасувати</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="uploadPercent">Зберегти</button>
+        <button mat-button type="button" (click)="cancel()" [disabled]="isDisabled">Скасувати</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isDisabled">Зберегти</button>
     </div>
 
 </form>

@@ -4,10 +4,14 @@
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 
+$custom-typography: mat-typography-config(
+    $font-family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;',
+    $body-1: mat-typography-level(16px, 24px, 500)
+);
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat-core($custom-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -28,4 +32,4 @@ $kyiv-bike-racks-theme: mat-light-theme($kyiv-bike-racks-primary, $kyiv-bike-rac
 
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-size: 16px; font-family: sans-serif; }

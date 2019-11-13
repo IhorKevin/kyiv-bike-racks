@@ -27,12 +27,16 @@ export class CreatePageComponent implements OnInit {
             .getUserPosition()
             .then(position => {
                 this.initialRack = {
-                    coords: new firestore.GeoPoint(position.coords.latitude, position.coords.longitude)
+                    coords: new firestore.GeoPoint(position.coords.latitude, position.coords.longitude),
+                    created_at: null
                 };
             })
-            .catch(error => {
+            .catch((error: PositionError) => {
+                const message = error.code == error.PERMISSION_DENIED ? 'Дозвольте сайту отримати ваше місце знаходження, щоб додавати велопарковки на карту' : error.message;
+                this.snackBar.open(message, null, {duration: 5000});
                 this.initialRack = {
-                    coords: new firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng)
+                    coords: new firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng),
+                    created_at: null
                 };
             });
     }
@@ -46,7 +50,7 @@ export class CreatePageComponent implements OnInit {
             })
             .catch(error => {
                 console.log('ERROR HAPPEN', error);
-                this.snackBar.open(error, 'OK', {duration: 3000});
+                this.snackBar.open(error.message, 'OK', {duration: 3000});
             })
     }
 

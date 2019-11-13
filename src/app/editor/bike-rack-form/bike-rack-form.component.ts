@@ -12,9 +12,8 @@ import {
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {Router} from "@angular/router";
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {GoogleMap} from "@angular/google-maps";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {debounceTime, takeUntil} from "rxjs/operators";
 import {firestore} from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
@@ -29,11 +28,10 @@ import {GeoService} from "../../services";
 export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     form: FormGroup;
-    uploadPercent: number;
-    previewSrc: string;
-    mapCenter: google.maps.LatLngLiteral;
+    uploadPercent: Observable<number>;
+    previewSrc: BehaviorSubject<string>;
     mapOptions: google.maps.MapOptions;
-    position: Position;
+    isDisabled: boolean;
     private file: File;
     private rackLocation: Subject<google.maps.LatLng>;
     private destroy: Subject<void>;
@@ -45,9 +43,7 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private fb: FormBuilder,
         private firestorage: AngularFireStorage,
-        private router: Router,
-        private snackBar: MatSnackBar,
-        private geoService: GeoService
+        private router: Router
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -59,12 +55,14 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
             mapTypeControl: false
         };
         this.save = new EventEmitter();
+        this.previewSrc = new BehaviorSubject<string>('');
         this.rackLocation = new Subject();
         this.destroy = new Subject();
     }
 
     ngOnInit() {
         this.buildForm(this.rack);
+        if(this.rack.photo) this.previewSrc.next(this.rack.photo);
         const geocoder = new google.maps.Geocoder();
         const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
             console.log('RESULTS', results);
@@ -82,33 +80,29 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy(): void {
         this.destroy.next();
         this.destroy.complete();
+        this.previewSrc.complete();
     }
 
     submit(): void {
         if(this.form.valid) {
+            this.isDisabled = true;
             const payload: BikeRack = {
                 name: this.form.value.name,
+                created_at: this.rack.created_at || firestore.Timestamp.now(),
                 capacity: this.form.value.capacity,
                 coords: new firestore.GeoPoint(this.form.value.latitude, this.form.value.longitude)
             };
             if(this.file) {
-                const extension = this.file.name.split('.').pop() || '.jpg';
-                const name = `${payload.coords.latitude}_${payload.coords.longitude}`;
-                const path: string = `/racks-photo/original/${name}.${extension}`;
-                const task: AngularFireUploadTask = this.firestorage.upload(path, this.file);
-                task.percentageChanges().subscribe(percentage => this.uploadPercent = percentage);
-                task.then(snapshot => {
-                    this.uploadPercent = null;
-                    this.file = null;
-                    snapshot.ref.getDownloadURL().then(url => {
-                        payload.photo = url;
-                        this.save.emit(payload);
-                    });
+                this.uploadPhoto(this.file).then(url => {
+                    payload.photo = url;
+                    this.save.emit(payload);
                 });
             }
             else this.save.emit(payload);
         }
-        else this.form.markAllAsTouched();
+        else {
+            this.form.markAllAsTouched();
+        }
     }
 
     cancel(): void {
@@ -120,13 +114,13 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.file = input.files.item(0);
             const reader = new FileReader();
             reader.addEventListener('load', event => {
-                this.previewSrc = event.target.result.toString();
+                this.previewSrc.next(event.target.result.toString());
             });
             reader.readAsDataURL(this.file);
         }
         else {
             this.file = null;
-            this.previewSrc = null;
+            this.previewSrc.next('');
         }
     }
 
@@ -135,19 +129,17 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.rackLocation.next(this.mapRef.getCenter());
     }
 
-    private updateUserPosition(): void {
-        this.geoService.getUserPosition()
-            .then(position => {
-                this.position = position;
-                this.mapCenter = {
-                    lat: this.position.coords.latitude,
-                    lng: this.position.coords.longitude
-                };
-            })
-            .catch(error => {
-                this.snackBar.open(error, 'OK', {duration: 3000});
-                this.position = null;
-            });
+    incrementCapacity(): void {
+        const control = this.form.get('capacity');
+        control.patchValue(control.value + 1);
+    }
+
+    decrementCapacity(): void {
+        const control = this.form.get('capacity');
+        const value: number = control.value;
+        if(value > 0) {
+            control.patchValue(value - 1);
+        }
     }
 
     private buildForm(r: BikeRack): void {
@@ -172,6 +164,23 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(center => {
                 this.form.get('latitude').patchValue(center.lat());
                 this.form.get('longitude').patchValue(center.lng());
+            });
+    }
+
+    private uploadPhoto(file: File): Promise<string> {
+        const name = `${this.form.value.latitude}_${this.form.value.longitude}`;
+        const extension = file.name.split('.').pop() || '.jpg';
+        const path: string = `/racks-photo/original/${name}.${extension}`;
+        console.log('DESTINATION', path);
+        const task: AngularFireUploadTask = this.firestorage.upload(path, file);
+        this.uploadPercent = task.percentageChanges();
+        return task
+            .then(snapshot => {
+                this.file = null;
+                return snapshot.ref.getDownloadURL();
+            })
+            .then(url => {
+                return url.replace('original', '1280');
             });
     }
 
