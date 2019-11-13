@@ -1,5 +1,4 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
@@ -17,7 +16,6 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {debounceTime, takeUntil} from "rxjs/operators";
 import {firestore} from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
-import {GeoService} from "../../services";
 
 @Component({
     selector: 'app-bike-rack-form',
@@ -25,7 +23,7 @@ import {GeoService} from "../../services";
     styleUrls: ['./bike-rack-form.component.styl'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     form: FormGroup;
     uploadPercent: Observable<number>;
@@ -45,15 +43,6 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
         private firestorage: AngularFireStorage,
         private router: Router
     ) {
-        this.mapOptions = {
-            center: GeoService.KyivCenterCoords,
-            minZoom: 11,
-            maxZoom: 19,
-            streetViewControl: false,
-            fullscreenControl: false,
-            panControl: false,
-            mapTypeControl: false
-        };
         this.save = new EventEmitter();
         this.previewSrc = new BehaviorSubject<string>('');
         this.rackLocation = new Subject();
@@ -61,6 +50,17 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.mapOptions = {
+            center: {
+                lat: this.rack.coords.latitude,
+                lng: this.rack.coords.longitude
+            },
+            minZoom: 11,
+            maxZoom: 19,
+            streetViewControl: false,
+            fullscreenControl: false,
+            mapTypeControl: false
+        };
         this.buildForm(this.rack);
         if(this.rack.photo) this.previewSrc.next(this.rack.photo);
         const geocoder = new google.maps.Geocoder();
@@ -68,13 +68,6 @@ export class BikeRackFormComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('RESULTS', results);
             console.log('STATUS', status);
         };
-    }
-
-    ngAfterViewInit(): void {
-        this.mapRef.panTo({
-            lat: this.rack.coords.latitude,
-            lng: this.rack.coords.longitude
-        });
     }
 
     ngOnDestroy(): void {
