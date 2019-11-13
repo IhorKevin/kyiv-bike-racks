@@ -17,6 +17,11 @@ import {debounceTime, takeUntil} from "rxjs/operators";
 import {firestore} from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
 
+const latitudeMin = -90;
+const latitudeMax = 90;
+const longitudeMin = -180;
+const longitudeMax = 180;
+
 @Component({
     selector: 'app-bike-rack-form',
     templateUrl: './bike-rack-form.component.html',
@@ -79,12 +84,13 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     submit(): void {
         if(this.form.valid) {
             this.isDisabled = true;
+            this.form.disable();
             const payload: BikeRack = {
-                name: this.form.value.name,
+                coords: new firestore.GeoPoint(this.form.value.latitude, this.form.value.longitude),
                 created_at: this.rack.created_at || firestore.Timestamp.now(),
-                capacity: this.form.value.capacity,
-                coords: new firestore.GeoPoint(this.form.value.latitude, this.form.value.longitude)
+                title: this.form.value.title
             };
+            if(this.form.value.capacity > 0) payload.capacity = this.form.value.capacity;
             if(this.file) {
                 this.uploadPhoto(this.file).then(url => {
                     payload.photo = url;
@@ -94,6 +100,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             else this.save.emit(payload);
         }
         else {
+            this.form.enable();
             this.form.markAllAsTouched();
         }
     }
@@ -110,10 +117,6 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                 this.previewSrc.next(event.target.result.toString());
             });
             reader.readAsDataURL(this.file);
-        }
-        else {
-            this.file = null;
-            this.previewSrc.next('');
         }
     }
 
@@ -137,18 +140,20 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     private buildForm(r: BikeRack): void {
         this.form = this.fb.group({
-            name: r.name,
             latitude: [r.coords.latitude, Validators.compose([
                 Validators.required,
-                Validators.min(-90),
-                Validators.max(90)
+                Validators.min(latitudeMin),
+                Validators.max(latitudeMax)
             ])],
-            longitude: [r.coords.latitude, Validators.compose([
+            longitude: [r.coords.longitude, Validators.compose([
                 Validators.required,
-                Validators.min(-180),
-                Validators.max(180)
+                Validators.min(longitudeMin),
+                Validators.max(longitudeMax)
             ])],
-            capacity: [r.capacity || 0, Validators.min(0)]
+            capacity: [r.capacity || 0, Validators.min(0)],
+            title: [r.title, Validators.maxLength(64)],
+            street_address: r.street_address || '',
+            owner_name: r.owner_name || ''
         });
 
         this.rackLocation
@@ -164,7 +169,6 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
         const name = `${this.form.value.latitude}_${this.form.value.longitude}`;
         const extension = file.name.split('.').pop() || '.jpg';
         const path: string = `/racks-photo/original/${name}.${extension}`;
-        console.log('DESTINATION', path);
         const task: AngularFireUploadTask = this.firestorage.upload(path, file);
         this.uploadPercent = task.percentageChanges();
         return task

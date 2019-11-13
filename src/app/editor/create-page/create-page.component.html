@@ -1,2 +1,4 @@
-<h1>Нова велопарковка</h1>
-<app-bike-rack-form *ngIf="initialRack" class="form-container" [rack]="initialRack" (save)="save($event)"></app-bike-rack-form>
+<div class="form-container">
+    <h1>Нова велопарковка</h1>
+    <app-bike-rack-form *ngIf="initialRack" [rack]="initialRack" (save)="save($event)"></app-bike-rack-form>
+</div>

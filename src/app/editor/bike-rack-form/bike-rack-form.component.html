@@ -1,4 +1,3 @@
-
 <form class="bike-rack-form" [formGroup]="form" (ngSubmit)="submit()">
     <div class="bike-rack-form__map-holder">
         <google-map
@@ -13,13 +12,23 @@
         <div class="bike-rack-form__pointer"></div>
     </div>
     <div class="bike-rack-form__photo" (click)="fileInput.click()">
-        <mat-icon>add_a_photo</mat-icon>
+        <ng-container *ngIf="previewSrc | async as src; else dropZone">
+            <div class="bike-rack-form__thumbnail">
+                <img  class="bike-rack-form__img" [src]="src" alt="">
+                <div class="bike-rack-form__overlay">
+                    <button mat-button type="button" class="bike-rack-form__change">
+                        <mat-icon>add_a_photo</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #dropZone>
+            <div class="bike-rack-form__dropzone">
+                <mat-icon>add_a_photo</mat-icon>
+            </div>
+        </ng-template>
+        <input type="file" hidden #fileInput (change)="onFileChange(fileInput)" accept="image/jpeg">
     </div>
-    <img *ngIf="previewSrc | async as src" class="bike-rack-form__preview" [src]="src" alt="">
-    <input type="file" hidden #fileInput (change)="onFileChange(fileInput)" accept="image/jpeg">
-    <mat-form-field>
-        <input matInput placeholder="Назва" formControlName="name">
-    </mat-form-field>
     <div>
         <mat-form-field class="bike-rack-form__capacity">
             <input matInput type="number" placeholder="Ємність" formControlName="capacity">
@@ -31,7 +40,19 @@
             <mat-icon>add</mat-icon>
         </button>
     </div>
-
+    <mat-form-field>
+        <input matInput type="text" placeholder="Заголовок" formControlName="title" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="text" placeholder="Адреса" formControlName="street_address" autocomplete="off">
+        <button mat-icon-button type="button" matSuffix title="Визначити">
+            <mat-icon>autorenew</mat-icon>
+        </button>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="text" placeholder="Власник" formControlName="owner_name" autocomplete="off">
+        <mat-hint>Кафе, банк, школа тощо</mat-hint>
+    </mat-form-field>
     <mat-progress-bar *ngIf="uploadPercent | async as percent" mode="determinate" [value]="percent"></mat-progress-bar>
     <div class="bike-rack-form__actions">
         <button mat-button type="button" (click)="cancel()" [disabled]="isDisabled">Скасувати</button>
