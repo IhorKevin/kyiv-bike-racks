@@ -15,25 +15,24 @@
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
 </google-map>
 
-<div class="menu-button">
-    <button mat-raised-button [matMenuTriggerFor]="menu">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item>Item 1</button>
-        <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor/create">Додати велопарковку</a>
-        <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Log out</button>
-    </mat-menu>
-</div>
-
-<mat-card class="rack-details" *ngIf="selectedRack | async as r">
-    <img mat-card-image [src]="useCompressedImage(r.photo)" alt="Фото велопарковки">
-    <mat-card-header>
-        <mat-card-title>{{r.title}}</mat-card-title>
-        <mat-card-subtitle>{{r.created_at?.toDate()}}</mat-card-subtitle>
-    </mat-card-header>
-</mat-card>
+<button class="menu-button" mat-raised-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item>Показувати всі</button>
+    <a mat-menu-item *ngIf="isLoggedIn | async" routerLink="/editor/create">Додати велопарковку</a>
+    <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Вийти</button>
+</mat-menu>
 
 <button class="mat-elevation-z2 location-button" mat-fab color="" type="button" (click)="centerMapToUserPosition()">
     <mat-icon>my_location</mat-icon>
 </button>
+
+<mat-card class="rack-details" *ngIf="selectedRack | async as r">
+    <img *ngIf="r.photo" mat-card-image class="rack-details__img" [src]="r.photo" alt="Фото велопарковки">
+    <mat-card-content class="rack-details__body">
+        <mat-card-title>{{r.title || r.street_address || r.coords.latitude}}</mat-card-title>
+        <mat-card-subtitle>{{r.created_at?.toDate() | date:'medium'}}</mat-card-subtitle>
+    </mat-card-content>
+</mat-card>
+

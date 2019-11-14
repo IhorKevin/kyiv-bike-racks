@@ -1,12 +1,12 @@
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
-import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/firestore";
-import {Observable, of} from "rxjs";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Observable} from "rxjs";
+import { switchMap, map } from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
-import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-racks-page',
@@ -72,17 +72,13 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             .pipe(map(snapshot => {
                 const payload = snapshot.payload;
                 if(payload.exists)  {
-                    const coords = payload.data().coords;
-                    this.mapRef.panTo({
-                        lat: coords.latitude,
-                        lng: coords.longitude
-                    });
+                    this.panToRackWithOffset(payload.data());
                     return payload.data();
                 }
                 else {
                     this.clearRack();
                     return null;
-                };
+                }
             }));
     }
 
@@ -120,11 +116,19 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         this.auth.logout().then(() => this.mapRef.panTo({lat: GeoService.KyivCenterCoords.lat, lng: GeoService.KyivCenterCoords.lng}));
     }
 
-    useCompressedImage(src: string): string {
-        if(src) {
-            return src.replace('original', '1280');
-        }
-        else return 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Bike_Parking_Lviv_7.jpg';
+    private panToRackWithOffset(rack: BikeRack): void {
+
+        // displays selected marker not in the map center but closer to top of the view
+        // calculate 15vh from center of the screen
+
+        const coords = rack.coords;
+        const bounds = this.mapRef.getBounds().toJSON();
+        const offset = (bounds.north - bounds.south) * 0.15;
+
+        this.mapRef.panTo({
+            lat: coords.latitude - offset,
+            lng: coords.longitude
+        })
     }
 
 }
