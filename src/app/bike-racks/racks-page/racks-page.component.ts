@@ -1,17 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {GoogleMap} from "@angular/google-maps";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Observable} from "rxjs";
+import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/firestore";
+import {Observable, of} from "rxjs";
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
+import { Router, ActivatedRoute } from '@angular/router';
+import { switchMap, map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-racks-page',
     templateUrl: './racks-page.component.html',
     styleUrls: ['./racks-page.component.styl']
 })
-export class RacksPageComponent implements OnInit {
+export class RacksPageComponent implements OnInit, AfterViewInit {
 
     userPosition: Position;
     zoom: number = 15;
@@ -30,7 +32,7 @@ export class RacksPageComponent implements OnInit {
     };
 
     racks: Observable<BikeRack[]>;
-    selectedRack: BikeRack;
+    selectedRack: Observable<BikeRack>;
     isLoggedIn: Observable<boolean>;
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
@@ -38,7 +40,13 @@ export class RacksPageComponent implements OnInit {
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
 
-    constructor(private auth: AuthService, private fs: AngularFirestore, private geoService: GeoService) {
+    constructor(
+        private auth: AuthService,
+        private fs: AngularFirestore,
+        private geoService: GeoService,
+        private router: Router,
+        private route: ActivatedRoute
+    ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
             minZoom: this.minZoom,
@@ -55,6 +63,27 @@ export class RacksPageComponent implements OnInit {
 
     ngOnInit() {
         this.racks.subscribe(result => console.log(result));
+    }
+
+    ngAfterViewInit(): void {
+        this.selectedRack = this.route.queryParamMap
+            .pipe(map(paramMap => paramMap.get('rack_id')))
+            .pipe(switchMap(id => this.fs.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
+            .pipe(map(snapshot => {
+                const payload = snapshot.payload;
+                if(payload.exists)  {
+                    const coords = payload.data().coords;
+                    this.mapRef.panTo({
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    });
+                    return payload.data();
+                }
+                else {
+                    this.clearRack();
+                    return null;
+                };
+            }));
     }
 
     centerMapToUserPosition(): void {
@@ -77,15 +106,14 @@ export class RacksPageComponent implements OnInit {
     }
 
     onRackSelect(rack: BikeRack): void {
-        this.selectedRack = rack;
-        this.mapRef.panTo({
-            lat: rack.coords.latitude,
-            lng: rack.coords.longitude
+        this.router.navigate(['.'], {
+            relativeTo: this.route,
+            queryParams: {rack_id: rack.id}
         });
     }
 
-    clearRack(event: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
-        this.selectedRack = null;
+    clearRack(event?: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
+        this.router.navigate(['.'], {relativeTo: this.route});
     }
 
     logout(): void {

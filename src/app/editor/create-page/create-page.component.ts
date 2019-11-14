@@ -46,7 +46,9 @@ export class CreatePageComponent implements OnInit {
             .add(rack)
             .then(result => {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks']);
+                this.router.navigate(['/racks'], {queryParams: {
+                    rack_id: result.id
+                }});
             })
             .catch(error => {
                 console.log('ERROR HAPPEN', error);

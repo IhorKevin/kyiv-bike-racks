@@ -26,10 +26,10 @@
     </mat-menu>
 </div>
 
-<mat-card class="rack-details" *ngIf="selectedRack as r">
+<mat-card class="rack-details" *ngIf="selectedRack | async as r">
     <img mat-card-image [src]="useCompressedImage(r.photo)" alt="Фото велопарковки">
     <mat-card-header>
-        <mat-card-title>{{r.name}}</mat-card-title>
+        <mat-card-title>{{r.title}}</mat-card-title>
         <mat-card-subtitle>{{r.created_at?.toDate()}}</mat-card-subtitle>
     </mat-card-header>
 </mat-card>
