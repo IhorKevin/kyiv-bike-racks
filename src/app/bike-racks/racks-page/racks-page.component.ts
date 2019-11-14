@@ -73,7 +73,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                 const payload = snapshot.payload;
                 if(payload.exists)  {
                     this.panToRackWithOffset(payload.data());
-                    return payload.data();
+                    return {
+                        id: payload.id,
+                        ...payload.data()
+                    };
                 }
                 else {
                     this.clearRack();
@@ -123,7 +126,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
         const coords = rack.coords;
         const bounds = this.mapRef.getBounds().toJSON();
-        const offset = (bounds.north - bounds.south) * 0.15;
+        const offset = (bounds.north - bounds.south) * 0.15; // 15vh from center
 
         this.mapRef.panTo({
             lat: coords.latitude - offset,
