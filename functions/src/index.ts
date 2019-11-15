@@ -28,12 +28,16 @@ export const resizeImage = functions.storage.object().onFinalize((metadata) => {
             .then(() => {
                 return sharp(tmpFilePath)
                     .withMetadata()
-                    .resize(1280, 1280, {fit: "inside"})
+                    .resize(1024, 1024, {fit: "inside"})
+                    .jpeg({
+                        quality: 65,
+                        progressive: true
+                    })
                     .toFile(tmpThumbFilePath);
             })
             .then(() => {
                 return destBucket.upload(tmpThumbFilePath, {
-                    destination: join(bucketDir, '..', '1280', fileName)
+                    destination: join(bucketDir, '..', 'preview', fileName)
                 });
             })
             .catch(error => console.log(error));
