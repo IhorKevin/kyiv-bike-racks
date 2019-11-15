@@ -9,4 +9,5 @@ export interface BikeRack {
     title?: string;
     street_address?: string;
     owner_name?: string;
+    is_private?: boolean;
 }

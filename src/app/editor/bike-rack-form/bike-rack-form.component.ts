@@ -38,6 +38,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     private file: File;
     private rackLocation: Subject<google.maps.LatLng>;
     private destroy: Subject<void>;
+    private geocoder: google.maps.Geocoder;
 
     @Input() rack: BikeRack;
     @Output() save: EventEmitter<BikeRack>;
@@ -64,15 +65,13 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             maxZoom: 19,
             streetViewControl: false,
             fullscreenControl: false,
-            mapTypeControl: false
+            mapTypeControl: false,
+            clickableIcons: false,
+            gestureHandling: "greedy"
         };
         this.buildForm(this.rack);
         if(this.rack.photo) this.previewSrc.next(this.rack.photo);
-        const geocoder = new google.maps.Geocoder();
-        const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
-            console.log('RESULTS', results);
-            console.log('STATUS', status);
-        };
+
     }
 
     ngOnDestroy(): void {
@@ -84,13 +83,18 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     submit(): void {
         if(this.form.valid) {
             this.isDisabled = true;
+            const formValue = this.form.value;
             this.form.disable();
             const payload: BikeRack = {
-                coords: new firestore.GeoPoint(this.form.value.latitude, this.form.value.longitude),
+                coords: new firestore.GeoPoint(formValue.latitude, formValue.longitude),
                 created_at: this.rack.created_at || firestore.Timestamp.now(),
-                title: this.form.value.title
+                capacity: formValue.capacity,
+                title: formValue.title,
+                street_address: formValue.street_address,
+                owner_name: formValue.owner_name,
+                is_private: formValue.is_private
             };
-            if(this.form.value.capacity > 0) payload.capacity = this.form.value.capacity;
+            if(this.rack.id) payload.id = this.rack.id;
             if(this.file) {
                 this.uploadPhoto(this.file).then(url => {
                     payload.photo = url;
@@ -138,6 +142,27 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    defineAddress(): void {
+        if(!this.geocoder) this.geocoder = new google.maps.Geocoder();
+        const onGeocode = (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
+            if(status == google.maps.GeocoderStatus.OK) {
+                const firstResult = results.shift();
+                const street_number: string = firstResult.address_components[0].short_name;
+                const street_name: string = firstResult.address_components[1].short_name;
+                const street_address = [street_name, street_number].join(', ');
+                this.form.get('street_address').patchValue(street_address);
+            }
+        };
+        const center = this.mapRef.getCenter();
+        const request = {
+            location: {
+                lat: center.lat(),
+                lng: center.lng()
+            }
+        };
+        this.geocoder.geocode(request, onGeocode);
+    }
+
     private buildForm(r: BikeRack): void {
         this.form = this.fb.group({
             latitude: [r.coords.latitude, Validators.compose([
@@ -153,7 +178,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             capacity: [r.capacity || 0, Validators.min(0)],
             title: [r.title, Validators.maxLength(64)],
             street_address: r.street_address || '',
-            owner_name: r.owner_name || ''
+            owner_name: r.owner_name || '',
+            is_private: r.is_private || false
         });
 
         this.rackLocation
@@ -177,7 +203,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                 return snapshot.ref.getDownloadURL();
             })
             .then(url => {
-                return url.replace('original', '1280');
+                return url.replace('original', 'preview');
             });
     }
 

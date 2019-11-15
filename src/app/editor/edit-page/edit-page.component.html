@@ -1,4 +1,4 @@
 <div class="form-container">
     <h1>Редагування:</h1>
-    <app-bike-rack-form *ngIf="rack" [rack]="rack"></app-bike-rack-form>
+    <app-bike-rack-form *ngIf="rack" [rack]="rack" (save)="save($event)"></app-bike-rack-form>
 </div>

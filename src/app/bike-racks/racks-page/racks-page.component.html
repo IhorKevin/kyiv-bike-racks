@@ -32,12 +32,16 @@
     <img *ngIf="r.photo" mat-card-image class="rack-details__img" [src]="r.photo" alt="Фото велопарковки">
     <mat-card-content class="rack-details__body">
         <mat-card-title>
-            {{r.title || r.street_address || r.coords.latitude}}
-            <a *ngIf="isLoggedIn | async" mat-button routerLink="/editor/edit/{{r.id}}/">
+            {{r.title || r.street_address || r.owner_name}}
+            <a *ngIf="isLoggedIn | async" mat-button routerLink="/editor/edit/{{r.id}}">
                 <mat-icon>edit</mat-icon>
             </a>
         </mat-card-title>
         <mat-card-subtitle>{{r.created_at?.toDate() | date:'medium'}}</mat-card-subtitle>
+        <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="r.coords | googleMaps" target="_blank">
+            <mat-icon>directions</mat-icon>
+        </a>
+        <mat-icon *ngIf="r.is_private" title="Приватна">policy</mat-icon>
     </mat-card-content>
 </mat-card>
 

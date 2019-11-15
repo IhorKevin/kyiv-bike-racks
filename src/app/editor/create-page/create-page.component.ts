@@ -19,7 +19,7 @@ export class CreatePageComponent implements OnInit {
         private geoService: GeoService,
         private snackBar: MatSnackBar,
         private router: Router,
-        private firestore: AngularFirestore
+        private store: AngularFirestore
     ) { }
 
     ngOnInit() {
@@ -42,7 +42,7 @@ export class CreatePageComponent implements OnInit {
     }
 
     save(rack: BikeRack): void {
-        this.firestore.collection<BikeRack>('/racks')
+        this.store.collection<BikeRack>('/racks')
             .add(rack)
             .then(result => {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
@@ -50,8 +50,7 @@ export class CreatePageComponent implements OnInit {
                     rack_id: result.id
                 }});
             })
-            .catch(error => {
-                console.log('ERROR HAPPEN', error);
+            .catch((error: firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
             })
     }

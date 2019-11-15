@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
-import { switchMap, map } from 'rxjs/operators';
+import {switchMap, map, shareReplay} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
@@ -42,7 +42,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     constructor(
         private auth: AuthService,
-        private fs: AngularFirestore,
+        private store: AngularFirestore,
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute
@@ -55,9 +55,14 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             fullscreenControl: false,
             panControl: false,
             mapTypeControl: false,
-            zoomControl: false
+            zoomControl: false,
+            rotateControl: true,
+            clickableIcons: false
         };
-        this.racks = this.fs.collection<BikeRack>('/racks').valueChanges({idField: 'id'});
+        this.racks = this.store
+            .collection<BikeRack>('/racks')
+            .valueChanges({idField: 'id'})
+            .pipe(shareReplay(1));
         this.isLoggedIn = this.auth.isAuthenticated();
     }
 
@@ -68,7 +73,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.selectedRack = this.route.queryParamMap
             .pipe(map(paramMap => paramMap.get('rack_id')))
-            .pipe(switchMap(id => this.fs.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
+            .pipe(switchMap(id => this.store.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
             .pipe(map(snapshot => {
                 const payload = snapshot.payload;
                 if(payload.exists)  {

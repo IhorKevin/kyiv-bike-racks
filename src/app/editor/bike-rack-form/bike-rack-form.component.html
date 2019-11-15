@@ -45,7 +45,7 @@
     </mat-form-field>
     <mat-form-field>
         <input matInput type="text" placeholder="Адреса" formControlName="street_address" autocomplete="off">
-        <button mat-icon-button type="button" matSuffix title="Визначити">
+        <button mat-icon-button type="button" matSuffix title="Визначити" (click)="defineAddress()">
             <mat-icon>autorenew</mat-icon>
         </button>
     </mat-form-field>
@@ -53,6 +53,8 @@
         <input matInput type="text" placeholder="Власник" formControlName="owner_name" autocomplete="off">
         <mat-hint>Кафе, банк, школа тощо</mat-hint>
     </mat-form-field>
+    <mat-checkbox formControlName="is_private" color="primary">Приватна</mat-checkbox>
+
     <div class="bike-rack-form__actions">
         <button mat-button type="button" (click)="cancel()" [disabled]="isDisabled">Скасувати</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="isDisabled">Зберегти</button>
