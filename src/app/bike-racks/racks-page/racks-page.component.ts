@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
-import {switchMap, map, shareReplay} from 'rxjs/operators';
+import {switchMap, map, shareReplay, filter} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
@@ -67,10 +67,19 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.racks.subscribe(result => console.log(result));
+        const id = this.route.snapshot.queryParamMap.get('rack_id');
+        const center = this.getCenterParam();
+        if(!id && center) {
+            const coords = center.split(',').map(value => Number(value));
+            this.mapOptions.center = {
+                lat: coords[0],
+                lng: coords[1]
+            }
+        }
     }
 
     ngAfterViewInit(): void {
+
         this.selectedRack = this.route.queryParamMap
             .pipe(map(paramMap => paramMap.get('rack_id')))
             .pipe(switchMap(id => this.store.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
@@ -84,10 +93,11 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                     };
                 }
                 else {
-                    this.clearRack();
+                    if(this.getCenterParam()) this.clearRack();
                     return null;
                 }
             }));
+    
     }
 
     centerMapToUserPosition(): void {
@@ -137,6 +147,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             lat: coords.latitude - offset,
             lng: coords.longitude
         })
+    }
+
+    private getCenterParam():string {
+        return this.route.snapshot.queryParamMap.get('center');
     }
 
 }

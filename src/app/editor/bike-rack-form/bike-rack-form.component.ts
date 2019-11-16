@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
-import {Router} from "@angular/router";
 import {GoogleMap} from "@angular/google-maps";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {debounceTime, takeUntil} from "rxjs/operators";
@@ -42,14 +41,15 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     @Input() rack: BikeRack;
     @Output() save: EventEmitter<BikeRack>;
+    @Output() cancel: EventEmitter<void>;
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     constructor(
         private fb: FormBuilder,
-        private firestorage: AngularFireStorage,
-        private router: Router
+        private firestorage: AngularFireStorage
     ) {
         this.save = new EventEmitter();
+        this.cancel = new EventEmitter();
         this.previewSrc = new BehaviorSubject<string>('');
         this.rackLocation = new Subject();
         this.destroy = new Subject();
@@ -109,8 +109,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    cancel(): void {
-        this.router.navigate(['/racks']);
+    onCancel(): void {
+        this.cancel.emit();
     }
 
     onFileChange(input: HTMLInputElement): void {

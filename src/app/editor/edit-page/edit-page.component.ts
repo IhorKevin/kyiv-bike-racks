@@ -14,7 +14,12 @@ export class EditPageComponent implements OnInit {
 
     rack: BikeRack;
 
-    constructor(private store: AngularFirestore, private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) { }
+    constructor(
+        private store: AngularFirestore, 
+        private router: Router, 
+        private route: ActivatedRoute, 
+        private snackBar: MatSnackBar
+    ) { }
 
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
@@ -29,18 +34,21 @@ export class EditPageComponent implements OnInit {
     }
 
     save(rack: BikeRack): void {
+        const center: string = [rack.coords.latitude, rack.coords.longitude].join(',');
         this.store
             .doc<BikeRack>(`/racks/${rack.id}`)
             .update(rack)
             .then(() => {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks'], {queryParams: {
-                        rack_id: rack.id
-                    }});
+                this.router.navigate(['/racks'], {queryParams: {center}});
             })
             .catch((error: firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
             })
+    }
+
+    back(): void {
+        this.router.navigate(['/racks'], {queryParams: {rack_id: this.rack.id}});
     }
 
 }

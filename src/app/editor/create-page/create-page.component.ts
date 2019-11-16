@@ -55,4 +55,8 @@ export class CreatePageComponent implements OnInit {
             })
     }
 
+    back(): void {
+        this.router.navigate(['/racks']);
+    }
+
 }
