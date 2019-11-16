@@ -42,6 +42,7 @@
     </div>
     <mat-form-field>
         <input matInput type="text" placeholder="Заголовок" formControlName="title" autocomplete="off">
+        <mat-hint>Так буде підписана на карті. Вказати опис або лишити порожнім, щоб використати адресу</mat-hint>
     </mat-form-field>
     <mat-form-field>
         <input matInput type="text" placeholder="Адреса" formControlName="street_address" autocomplete="off">
@@ -54,7 +55,12 @@
         <mat-hint>Кафе, банк, школа тощо</mat-hint>
     </mat-form-field>
     <mat-checkbox formControlName="is_private" color="primary">Приватна</mat-checkbox>
-
+    <mat-button-toggle-group class="bike-rack-form__quality">
+        <mat-button-toggle value="high">High</mat-button-toggle>
+        <mat-button-toggle value="mid" [checked]="true">Mid</mat-button-toggle>
+        <mat-button-toggle value="low">Low</mat-button-toggle>
+    </mat-button-toggle-group>
+    
     <div class="bike-rack-form__actions">
         <button mat-button type="button" (click)="onCancel()" [disabled]="isDisabled">Скасувати</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="isDisabled">Зберегти</button>

@@ -12,6 +12,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 const materialComponents = [
     MatButtonModule,
@@ -22,7 +23,8 @@ const materialComponents = [
     MatFormFieldModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatButtonToggleModule
 ];
 
 @NgModule({

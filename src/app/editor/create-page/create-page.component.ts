@@ -42,13 +42,12 @@ export class CreatePageComponent implements OnInit {
     }
 
     save(rack: BikeRack): void {
+        const center: string = [rack.coords.latitude, rack.coords.longitude].join(',');
         this.store.collection<BikeRack>('/racks')
             .add(rack)
-            .then(result => {
+            .then(() => {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks'], {queryParams: {
-                    rack_id: result.id
-                }});
+                this.router.navigate(['/racks'], {queryParams: {center}});
             })
             .catch((error: firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});

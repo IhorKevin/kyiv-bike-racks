@@ -33,19 +33,21 @@
 </button>
 
 <mat-card class="rack-details" *ngIf="selectedRack | async as r">
-    <img *ngIf="r.photo" mat-card-image class="rack-details__img" [src]="r.photo" alt="Фото велопарковки">
+    <img *ngIf="r.photo" mat-card-image class="rack-details__img" [src]="r.photo" alt="Фото стійок для велосипедів">
     <mat-card-content class="rack-details__body">
         <mat-card-title>
+            <mat-icon *ngIf="r.is_private" [inline]="true" title="Приватна">policy</mat-icon>
             {{r.title || r.street_address || r.owner_name}}
-            <a *ngIf="isLoggedIn | async" mat-button routerLink="/editor/edit/{{r.id}}">
-                <mat-icon>edit</mat-icon>
-            </a>
         </mat-card-title>
-        <mat-card-subtitle>{{r.created_at?.toDate() | date:'medium'}}</mat-card-subtitle>
         <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="r.coords | googleMaps" target="_blank">
             <mat-icon>directions</mat-icon>
         </a>
-        <mat-icon *ngIf="r.is_private" title="Приватна">policy</mat-icon>
+        <div *ngIf="r.capacity">Місць: {{r.capacity}}</div>
+        <div *ngIf="r.street_address">Адреса: {{r.street_address}}</div>
+        <div *ngIf="r.owner_name">Власник: {{r.owner_name}}</div>
     </mat-card-content>
+    <mat-card-actions *ngIf="isLoggedIn | async">
+        <a mat-button routerLink="/editor/edit/{{r.id}}">Редагувати</a>
+    </mat-card-actions>
 </mat-card>
 
