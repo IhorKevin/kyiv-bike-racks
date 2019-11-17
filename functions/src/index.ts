@@ -3,6 +3,9 @@ import {Storage} from '@google-cloud/storage';
 import {tmpdir} from 'os';
 import {basename, dirname, join} from 'path';
 import * as sharp from 'sharp';
+import admin = require('firebase-admin');
+
+admin.initializeApp();
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -44,4 +47,15 @@ export const resizeImage = functions.storage.object().onFinalize((metadata) => {
     }
     else return;
 
+});
+
+export const onAuth = functions.auth.user().onCreate((user, context) => {
+    const email = user.email;
+    return admin.firestore().collection('/allowed-emails')
+        .get()
+        .then(snapshot => {
+            const emails: string[] = snapshot.docs.map(doc => doc.data().email);
+            const isAllowed = emails.some(value => value == email);
+            if(isAllowed) admin.auth().setCustomUserClaims(user.uid, {editor: true});
+        });
 });
