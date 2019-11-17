@@ -46,7 +46,7 @@
         <div *ngIf="r.street_address">Адреса: {{r.street_address}}</div>
         <div *ngIf="r.owner_name">Власник: {{r.owner_name}}</div>
     </mat-card-content>
-    <mat-card-actions *ngIf="isLoggedIn | async">
+    <mat-card-actions *ngIf="isLoggedIn | async" class="rack-details__actions">
         <a mat-button routerLink="/editor/edit/{{r.id}}">Редагувати</a>
     </mat-card-actions>
 </mat-card>
