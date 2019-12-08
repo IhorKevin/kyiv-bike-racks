@@ -10,4 +10,5 @@ export interface BikeRack {
     street_address?: string;
     owner_name?: string;
     is_private?: boolean;
+    is_sheffield?: boolean;
 }

@@ -42,9 +42,20 @@
         <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="r.coords | googleMaps" target="_blank">
             <mat-icon>directions</mat-icon>
         </a>
-        <div *ngIf="r.capacity">Місць: {{r.capacity}}</div>
-        <div *ngIf="r.street_address">Адреса: {{r.street_address}}</div>
-        <div *ngIf="r.owner_name">Власник: {{r.owner_name}}</div>
+        <table class="rack-details__table">
+            <tr *ngIf="r.capacity">
+                <td>Місць:</td>
+                <td>{{r.capacity}}</td>
+            </tr>
+            <tr *ngIf="r.street_address">
+                <td>Адреса:</td>
+                <td>{{r.street_address}}</td>
+            </tr>
+            <tr *ngIf="r.owner_name">
+                <td>Власник:</td>
+                <td>{{r.owner_name}}</td>
+            </tr>
+        </table>
     </mat-card-content>
     <mat-card-actions *ngIf="isLoggedIn | async" class="rack-details__actions">
         <a mat-button routerLink="/editor/edit/{{r.id}}">Редагувати</a>

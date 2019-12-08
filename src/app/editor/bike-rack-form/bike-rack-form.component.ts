@@ -92,7 +92,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
                 title: formValue.title,
                 street_address: formValue.street_address,
                 owner_name: formValue.owner_name,
-                is_private: formValue.is_private
+                is_private: formValue.is_private,
+                is_sheffield: formValue.is_sheffield
             };
             if(this.rack.id) payload.id = this.rack.id;
             if(this.file) {
@@ -179,7 +180,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             title: [r.title, Validators.maxLength(64)],
             street_address: r.street_address || '',
             owner_name: r.owner_name || '',
-            is_private: r.is_private || false
+            is_private: r.is_private || false,
+            is_sheffield: r.is_sheffield || false
         });
 
         this.rackLocation
