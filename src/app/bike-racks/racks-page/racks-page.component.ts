@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
-import {switchMap, map, shareReplay, filter} from 'rxjs/operators';
+import {switchMap, map, shareReplay} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
@@ -43,7 +43,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     racks: Observable<BikeRack[]>;
     selectedRack: Observable<BikeRack>;
     isLoggedIn: Observable<boolean>;
-    hints: RackHint[];
+    hints: Observable<RackHint[]>;
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
@@ -74,6 +74,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             .collection<BikeRack>('/racks')
             .valueChanges({idField: 'id'})
             .pipe(shareReplay(1));
+
+        this.hints = this.http.get<RackHint[]>('assets/hints.json');
         this.isLoggedIn = this.auth.isAuthenticated();
     }
 
@@ -86,12 +88,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                 lat: coords[0],
                 lng: coords[1]
             }
-        }
-
-        if(this.isLoggedIn) {
-            this.http
-                .get<RackHint[]>('assets/hints.json')
-                .subscribe(hints => this.hints = hints);
         }
     }
 
