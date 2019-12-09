@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import {HttpClient} from "@angular/common/http";
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
@@ -7,6 +8,8 @@ import {switchMap, map, shareReplay, filter} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService} from "../../services";
+
+type RackHint = [number, number];
 
 @Component({
     selector: 'app-racks-page',
@@ -31,9 +34,16 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         visible: true
     };
 
+    hintMarkerOptions: google.maps.MarkerOptions = {
+        icon: '/assets/map-markers/rack-hint.svg',
+        visible: true,
+        clickable: false
+    };
+
     racks: Observable<BikeRack[]>;
     selectedRack: Observable<BikeRack>;
     isLoggedIn: Observable<boolean>;
+    hints: RackHint[];
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
@@ -45,7 +55,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private store: AngularFirestore,
         private geoService: GeoService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private http: HttpClient
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -76,6 +87,12 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                 lng: coords[1]
             }
         }
+
+        if(this.isLoggedIn) {
+            this.http
+                .get<RackHint[]>('assets/hints.json')
+                .subscribe(hints => this.hints = hints);
+        }
     }
 
     ngAfterViewInit(): void {
@@ -97,7 +114,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                     return null;
                 }
             }));
-    
+
     }
 
     centerMapToUserPosition(): void {

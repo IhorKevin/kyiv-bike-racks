@@ -13,6 +13,10 @@
         (mapClick)="onRackSelect(rack)"
     ></map-marker>
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
+    <ng-container *ngIf="hints">
+        <map-marker *ngFor="let hint of hints" [position]="{lat: hint[1], lng: hint[0]}" [options]="hintMarkerOptions"></map-marker>
+    </ng-container>
+
 </google-map>
 
 <button class="menu-button" mat-raised-button [matMenuTriggerFor]="menu">
