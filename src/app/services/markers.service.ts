@@ -8,6 +8,7 @@ export interface MarkerOptionsSet {
     userLocation: google.maps.MarkerOptions;
     hint: google.maps.MarkerOptions;
     rack: google.maps.MarkerOptions;
+    rackLow: google.maps.MarkerOptions;
 }
 
 @Injectable({
@@ -35,8 +36,8 @@ export class MarkersService {
         return this.folder + 'user-location.svg';
     }
 
-    getRackIcon(): string {
-        return this.folder + 'rack-marker-default.png';
+    getRackIcon(style: 'default' | 'low'): string {
+        return `${this.folder}rack-marker-${style}.png`;
     }
 
     options(): MarkerOptionsSet {
@@ -52,7 +53,11 @@ export class MarkersService {
                 clickable: false
             },
             rack: {
-                icon: this.getRackIcon(),
+                icon: this.getRackIcon('default'),
+                visible: true
+            },
+            rackLow: {
+                icon: this.getRackIcon('low'),
                 visible: true
             }
         }
