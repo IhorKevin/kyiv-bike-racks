@@ -1,0 +1,29 @@
+<mat-card class="rack-details">
+    <img *ngIf="rack.photo" mat-card-image class="rack-details__img" [src]="rack.photo" alt="Фото стійок для велосипедів">
+    <mat-card-content class="rack-details__body">
+        <mat-card-title>
+            <mat-icon *ngIf="rack.is_private" [inline]="true" title="Службова">policy</mat-icon>
+            {{rack.title || rack.street_address || rack.owner_name}}
+        </mat-card-title>
+        <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="rack.coords | googleMaps" target="_blank">
+            <mat-icon>directions</mat-icon>
+        </a>
+        <table class="rack-details__table">
+            <tr *ngIf="rack.capacity">
+                <td>Місць:</td>
+                <td>{{rack.capacity}}</td>
+            </tr>
+            <tr *ngIf="rack.street_address">
+                <td>Адреса:</td>
+                <td>{{rack.street_address}}</td>
+            </tr>
+            <tr *ngIf="rack.owner_name">
+                <td>Власник:</td>
+                <td>{{rack.owner_name}}</td>
+            </tr>
+        </table>
+    </mat-card-content>
+    <mat-card-actions *ngIf="canEdit" class="rack-details__actions">
+        <a mat-button routerLink="/editor/edit/{{rack.id}}">Редагувати</a>
+    </mat-card-actions>
+</mat-card>
