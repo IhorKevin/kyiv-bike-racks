@@ -9,12 +9,12 @@
     <map-marker
         *ngFor="let rack of racks | async"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
-        [options]="rackMarkerOptions"
+        [options]="markerOptions.rack"
         (mapClick)="onRackSelect(rack)"
     ></map-marker>
-    <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="userMarkerOptions"></map-marker>
+    <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="markerOptions.userLocation"></map-marker>
     <ng-container *ngIf="isLoggedIn | async">
-        <map-marker *ngFor="let hint of hints | async" [position]="{lat: hint[1], lng: hint[0]}" [options]="hintMarkerOptions"></map-marker>
+        <map-marker *ngFor="let hint of hints | async" [position]="{lat: hint[1], lng: hint[0]}" [options]="markerOptions.hint"></map-marker>
     </ng-container>
 
 </google-map>
@@ -37,33 +37,3 @@
 </button>
 
 <app-rack-card *ngIf="selectedRack | async as rack" [rack]="rack" [canEdit]="isLoggedIn | async"></app-rack-card>
-<!--<mat-card class="rack-details" *ngIf="selectedRack | async as r">-->
-<!--    <img *ngIf="r.photo" mat-card-image class="rack-details__img" [src]="r.photo" alt="Фото стійок для велосипедів">-->
-<!--    <mat-card-content class="rack-details__body">-->
-<!--        <mat-card-title>-->
-<!--            <mat-icon *ngIf="r.is_private" [inline]="true" title="Приватна">policy</mat-icon>-->
-<!--            {{r.title || r.street_address || r.owner_name}}-->
-<!--        </mat-card-title>-->
-<!--        <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="r.coords | googleMaps" target="_blank">-->
-<!--            <mat-icon>directions</mat-icon>-->
-<!--        </a>-->
-<!--        <table class="rack-details__table">-->
-<!--            <tr *ngIf="r.capacity">-->
-<!--                <td>Місць:</td>-->
-<!--                <td>{{r.capacity}}</td>-->
-<!--            </tr>-->
-<!--            <tr *ngIf="r.street_address">-->
-<!--                <td>Адреса:</td>-->
-<!--                <td>{{r.street_address}}</td>-->
-<!--            </tr>-->
-<!--            <tr *ngIf="r.owner_name">-->
-<!--                <td>Власник:</td>-->
-<!--                <td>{{r.owner_name}}</td>-->
-<!--            </tr>-->
-<!--        </table>-->
-<!--    </mat-card-content>-->
-<!--    <mat-card-actions *ngIf="isLoggedIn | async" class="rack-details__actions">-->
-<!--        <a mat-button routerLink="/editor/edit/{{r.id}}">Редагувати</a>-->
-<!--    </mat-card-actions>-->
-<!--</mat-card>-->
-

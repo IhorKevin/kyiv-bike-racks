@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {HttpClientModule} from "@angular/common/http";
 import { AngularFireModule, FirebaseOptions } from '@angular/fire';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireAuthModule } from "@angular/fire/auth";
@@ -34,6 +35,7 @@ const fireConfig: FirebaseOptions = {
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         BikeRacksModule,
         AuthModule,
+        HttpClientModule,
         BrowserAnimationsModule
     ],
     providers: [],

@@ -1,15 +1,12 @@
 import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import {HttpClient} from "@angular/common/http";
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {switchMap, map, shareReplay} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
-import {GeoService} from "../../services";
-
-type RackHint = [number, number];
+import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
 
 @Component({
     selector: 'app-racks-page',
@@ -22,23 +19,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     zoom: number = 15;
 
     mapOptions: google.maps.MapOptions;
-
-    userMarkerOptions: google.maps.MarkerOptions = {
-        icon: '/assets/map-markers/user-location.svg',
-        visible: true,
-        clickable: false
-    };
-
-    rackMarkerOptions: google.maps.MarkerOptions = {
-        icon: '/assets/map-markers/rack-marker-default.png',
-        visible: true
-    };
-
-    hintMarkerOptions: google.maps.MarkerOptions = {
-        icon: '/assets/map-markers/rack-hint.svg',
-        visible: true,
-        clickable: false
-    };
+    markerOptions: MarkerOptionsSet;
 
     racks: Observable<BikeRack[]>;
     selectedRack: Observable<BikeRack>;
@@ -56,7 +37,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute,
-        private http: HttpClient
+        private markersService: MarkersService
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -75,7 +56,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             .valueChanges({idField: 'id'})
             .pipe(shareReplay(1));
 
-        this.hints = this.http.get<RackHint[]>('assets/hints.json');
+        this.markerOptions = this.markersService.options();
+        this.hints = this.markersService.getHints();
         this.isLoggedIn = this.auth.isAuthenticated();
     }
 
