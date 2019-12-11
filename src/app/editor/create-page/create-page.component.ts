@@ -24,7 +24,10 @@ export class CreatePageComponent implements OnInit {
 
     ngOnInit() {
         this.geoService
-            .getUserPosition()
+            .getUserPosition({
+                enableHighAccuracy: true,
+                maximumAge: 0
+            })
             .then(position => {
                 this.initialRack = {
                     coords: new firestore.GeoPoint(position.coords.latitude, position.coords.longitude),
