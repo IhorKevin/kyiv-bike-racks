@@ -34,7 +34,7 @@
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "~9.0.0-rc.0",
     "@angular/platform-browser-dynamic": "~9.0.0-rc.0",
-    "@angular/pwa": "^0.803.17",
+    "@angular/pwa": "^0.803.21",
     "@angular/router": "~9.0.0-rc.0",
     "@angular/service-worker": "~9.0.0-rc.0",
     "firebase": "^7.3.0",
