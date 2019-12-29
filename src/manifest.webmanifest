@@ -2,12 +2,13 @@
   "lang": "uk-UA",
   "name": "Велопарковки Києва",
   "short_name": "Велопарковки",
-  "theme_color": "#222222",
-  "background_color": "#fafafa",
+  "theme_color": "#212121",
+  "background_color": "#424242",
   "display": "standalone",
   "description": "Карта місць, де можна припаркувати велосипед у Києві",
+  "categories": ["navigation", "bicycles"],
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/racks",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
