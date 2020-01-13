@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit, TemplateRef} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
 import {AngularFirestore} from "@angular/fire/firestore";
@@ -7,6 +7,7 @@ import {switchMap, map, shareReplay} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
     selector: 'app-racks-page',
@@ -37,7 +38,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute,
-        private markersService: MarkersService
+        private markersService: MarkersService,
+        private dialog: MatDialog
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -127,6 +129,13 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     logout(): void {
         this.auth.logout().then(() => this.mapRef.panTo({lat: GeoService.KyivCenterCoords.lat, lng: GeoService.KyivCenterCoords.lng}));
+    }
+
+    openSettings(template: TemplateRef<any>): void {
+        this.dialog.open(template, {
+            maxWidth: '90vw',
+            maxHeight: '90vh'
+        });
     }
 
     private panToRackWithOffset(rack: BikeRack): void {
