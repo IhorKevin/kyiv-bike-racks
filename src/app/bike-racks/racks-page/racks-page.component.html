@@ -40,11 +40,13 @@
 <app-rack-card *ngIf="selectedRack | async as rack" [rack]="rack" [canEdit]="isLoggedIn | async"></app-rack-card>
 
 <ng-template #settingsDialogContent>
-    <h2 mat-dialog-title>Налаштування</h2>
+    <h2 mat-dialog-title>Показувати</h2>
     <mat-dialog-content>
-        <p>Службові - ні</p>
-        <p>Малі - так</p>
-        <p>Будь-якого типу - так</p>
+        <mat-selection-list (selectionChange)="onSettingsChange($event)">
+            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.private" value="private">Службові</mat-list-option>
+            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.small" value="small">Малі</mat-list-option>
+            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.allDesigns" value="allDesigns">Будь-якої конструкції</mat-list-option>
+        </mat-selection-list>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-button [mat-dialog-close]="true">Закрити</button>

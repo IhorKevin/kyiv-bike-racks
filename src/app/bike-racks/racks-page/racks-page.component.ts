@@ -1,13 +1,17 @@
 import {Component, OnInit, ViewChild, AfterViewInit, TemplateRef} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Observable} from "rxjs";
-import {switchMap, map, shareReplay} from 'rxjs/operators';
+import {MatDialog} from "@angular/material/dialog";
+import {MatSelectionListChange} from "@angular/material/list";
+import {AngularFirestore, CollectionReference, Query, QueryFn} from "@angular/fire/firestore";
+import {BehaviorSubject, Observable} from "rxjs";
+import {switchMap, map, shareReplay, debounceTime} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
-import {MatDialog} from "@angular/material/dialog";
+import {FilterSettings} from "../settings";
+
+const settingsKey: string = 'racks_settings';
 
 @Component({
     selector: 'app-racks-page',
@@ -27,10 +31,13 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     isLoggedIn: Observable<boolean>;
     hints: Observable<RackHint[]>;
 
+    settings: FilterSettings;
+
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
+    private settingsChange: BehaviorSubject<FilterSettings>;
 
     constructor(
         private auth: AuthService,
@@ -53,10 +60,23 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             rotateControl: true,
             clickableIcons: false
         };
-        this.racks = this.store
-            .collection<BikeRack>('/racks')
-            .valueChanges({idField: 'id'})
-            .pipe(shareReplay(1));
+        this.initSettings();
+
+        this.racks = this.settingsChange
+            .pipe(debounceTime(500))
+            .pipe(switchMap(settings => {
+                const queryFn: QueryFn = ref => {
+                    let query: Query | CollectionReference = ref;
+                    if(!settings.private) query = query.where('is_private', '==', false);
+                    if(!settings.small) query = query.where('capacity', '>=', 6);
+                    if(!settings.allDesigns) query = query.where('is_sheffield', '==', true);
+                    return query;
+                };
+                return this.store
+                    .collection<BikeRack>('/racks', queryFn)
+                    .valueChanges({idField: 'id'})
+                    .pipe(shareReplay(1));
+            }));
 
         this.markerOptions = this.markersService.options();
         this.hints = this.markersService.getHints();
@@ -134,8 +154,19 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     openSettings(template: TemplateRef<any>): void {
         this.dialog.open(template, {
             maxWidth: '90vw',
-            maxHeight: '90vh'
+            maxHeight: '90vh',
+            autoFocus: false
         });
+    }
+
+    onSettingsChange(event: MatSelectionListChange): void {
+        const enabledKeys: string[] = event.source.selectedOptions.selected.map(option => option.value);
+
+        Object.keys(this.settings).forEach(key => {
+            this.settings[key] = enabledKeys.includes(key);
+        });
+        localStorage.setItem(settingsKey, JSON.stringify(this.settings));
+        this.settingsChange.next(this.settings);
     }
 
     private panToRackWithOffset(rack: BikeRack): void {
@@ -155,6 +186,18 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     private getCenterParam():string {
         return this.route.snapshot.queryParamMap.get('center');
+    }
+
+    private initSettings(): void {
+        const initial: FilterSettings = {
+            private: false,
+            small: true,
+            allDesigns: true
+        };
+        const saved: FilterSettings = JSON.parse(localStorage.getItem(settingsKey));
+
+        this.settings = saved || initial;
+        this.settingsChange = new BehaviorSubject(this.settings);
     }
 
 }
