@@ -82,3 +82,11 @@ export const updateAllowedUsers = functions.pubsub.schedule('every monday 09:00'
             });
         });
 });
+
+export const logNewRacks = functions.firestore.document('/racks/{id}').onCreate((snapshot, context) => {
+    const link = 'https://kyiv-bike-racks.web.app/racks?rack_id=' + context.params.id;
+    const email = 'unknown';
+    const message = `User ${email} created rack ${link}`;
+    console.info(message);
+    return message;
+});
