@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {Observable} from "rxjs";
 import {User, auth} from "firebase/app";
-import { map } from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -19,6 +19,14 @@ export class AuthService {
         return this.user.pipe(map(user => Boolean(user)));
     }
 
+    isEditor(): Observable<boolean> {
+        return this.getCustomClaims().pipe(map(claims => claims.editor || claims.admin));
+    }
+
+    isAdmin(): Observable<boolean> {
+        return this.getCustomClaims().pipe(map(claims => claims.admin));
+    }
+
     login(): Promise<auth.UserCredential> {
         return this.fireAuth.auth
             .setPersistence(auth.Auth.Persistence.LOCAL)
@@ -27,6 +35,12 @@ export class AuthService {
 
     logout(): Promise<void> {
         return this.fireAuth.auth.signOut();
+    }
+
+    private getCustomClaims(): Observable<{[key: string]: boolean}> {
+        return this.user
+            .pipe(switchMap(user => user.getIdTokenResult()))
+            .pipe(map(result => result.claims));
     }
 
 }

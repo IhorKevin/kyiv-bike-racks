@@ -29,6 +29,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     racks: Observable<BikeRack[]>;
     selectedRack: Observable<BikeRack>;
     isLoggedIn: Observable<boolean>;
+    isEditor: Observable<boolean>;
+    isAdmin: Observable<boolean>;
     hints: Observable<RackHint[]>;
 
     settings: FilterSettings;
@@ -81,6 +83,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         this.markerOptions = this.markersService.options();
         this.hints = this.markersService.getHints();
         this.isLoggedIn = this.auth.isAuthenticated();
+        this.isEditor = this.auth.isEditor();
+        this.isAdmin = this.auth.isAdmin();
     }
 
     ngOnInit() {

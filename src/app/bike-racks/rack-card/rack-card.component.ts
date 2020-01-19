@@ -11,5 +11,6 @@ export class RackCardComponent {
 
     @Input() rack: BikeRack;
     @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
 }

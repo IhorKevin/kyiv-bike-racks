@@ -24,6 +24,7 @@
         </table>
     </mat-card-content>
     <mat-card-actions *ngIf="canEdit" class="rack-details__actions">
+        <button *ngIf="canDelete" mat-button type="button" color="warn">Видалити</button>
         <a mat-button routerLink="/editor/edit/{{rack.id}}">Редагувати</a>
     </mat-card-actions>
 </mat-card>
