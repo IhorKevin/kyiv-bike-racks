@@ -37,7 +37,13 @@
     <mat-icon>my_location</mat-icon>
 </button>
 
-<app-rack-card *ngIf="selectedRack | async as rack" [rack]="rack" [canEdit]="isEditor | async" [canDelete]="isAdmin | async"></app-rack-card>
+<app-rack-card
+    *ngIf="selectedRack | async as rack"
+    [rack]="rack"
+    [canEdit]="isEditor | async"
+    [canDelete]="isAdmin | async"
+    (delete)="openConfirmation(confirmationDialogContent, rack)"
+></app-rack-card>
 
 <ng-template #settingsDialogContent>
     <h2 mat-dialog-title>Показувати</h2>
@@ -50,5 +56,15 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-button [mat-dialog-close]="true">Закрити</button>
+    </mat-dialog-actions>
+</ng-template>
+
+<ng-template #confirmationDialogContent let-data>
+    <mat-dialog-content>
+        Видалити {{data.title || data.street_address || data.owner_name || data.id}}?
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button [mat-dialog-close]="true">Скасувати</button>
+        <button mat-button color="warn" (click)="deleteRack(data.id)">Видалити</button>
     </mat-dialog-actions>
 </ng-template>

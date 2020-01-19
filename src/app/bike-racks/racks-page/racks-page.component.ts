@@ -10,6 +10,7 @@ import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
 import {FilterSettings} from "../settings";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 const settingsKey: string = 'racks_settings';
 
@@ -48,7 +49,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private router: Router,
         private route: ActivatedRoute,
         private markersService: MarkersService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -171,6 +173,26 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         });
         localStorage.setItem(settingsKey, JSON.stringify(this.settings));
         this.settingsChange.next(this.settings);
+    }
+
+    openConfirmation(template: TemplateRef<any>, rack: BikeRack): void {
+        this.dialog.open(template, {
+            data: rack,
+            autoFocus: false
+        });
+    }
+
+    deleteRack(id: string): void {
+        this.store
+            .collection('racks/')
+            .doc(id)
+            .delete()
+            .then(() => {
+                this.dialog.closeAll();
+                this.clearRack();
+                this.snackBar.open('Велопарковку видалено', 'OK', {duration: 3000});
+            })
+            .catch(error => this.snackBar.open(error.message, 'OK'));
     }
 
     private panToRackWithOffset(rack: BikeRack): void {

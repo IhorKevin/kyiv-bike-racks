@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {BikeRack} from "../bike-rack";
 
 @Component({
@@ -12,5 +12,11 @@ export class RackCardComponent {
     @Input() rack: BikeRack;
     @Input() canEdit: boolean;
     @Input() canDelete: boolean;
+
+    @Output() delete: EventEmitter<void>;
+
+    constructor() {
+        this.delete = new EventEmitter();
+    }
 
 }

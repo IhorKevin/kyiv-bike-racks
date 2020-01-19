@@ -1,6 +1,6 @@
 import {Component, OnInit, HostBinding} from '@angular/core';
 import {Title} from "@angular/platform-browser";
-import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {filter, map} from "rxjs/operators";
 
 @Component({
