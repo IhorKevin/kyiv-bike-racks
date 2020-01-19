@@ -53,9 +53,15 @@ export const onAuth = functions.auth.user().onCreate((user, context) => {
     const email = user.email;
     return admin.firestore().collection('/allowed-emails')
         .get()
-        .then(snapshot => {
-            const emails: string[] = snapshot.docs.map(doc => doc.data().email);
-            const isAllowed = emails.some(value => value == email);
-            if(isAllowed) admin.auth().setCustomUserClaims(user.uid, {editor: true});
+        .then(snapshot => snapshot.docs.map(doc => doc.data()))
+        .then(data => {
+            const current = data.find(docData => docData.email == email);
+            if(current) {
+                admin.auth().setCustomUserClaims(user.uid, {
+                    editor: current.editor,
+                    admin: current.admin
+                });
+            }
+            else console.warn('User with email', email, 'is not in access list');
         });
 });
