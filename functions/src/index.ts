@@ -7,9 +7,6 @@ import admin = require('firebase-admin');
 
 admin.initializeApp();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
 const storage = new Storage();
 export const resizeImage = functions.storage.object().onFinalize((metadata) => {
     const filePath = metadata.name || '/racks-photo/placeholder.jpg';
@@ -49,6 +46,14 @@ export const resizeImage = functions.storage.object().onFinalize((metadata) => {
 
 });
 
+function setClaims(user: admin.auth.UserRecord, allowed: {[key: string]: any}) {
+    const claims = {
+        editor: allowed.editor,
+        admin: allowed.admin
+    };
+    return admin.auth().setCustomUserClaims(user.uid, claims);
+}
+
 export const onAuth = functions.auth.user().onCreate((user, context) => {
     const email = user.email;
     return admin.firestore().collection('/allowed-emails')
@@ -56,12 +61,24 @@ export const onAuth = functions.auth.user().onCreate((user, context) => {
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
         .then(data => {
             const current = data.find(docData => docData.email == email);
-            if(current) {
-                admin.auth().setCustomUserClaims(user.uid, {
-                    editor: current.editor,
-                    admin: current.admin
-                });
-            }
+            if(current) setClaims(user, current);
             else console.warn('User with email', email, 'is not in access list');
+        })
+        .catch(error => console.warn(error.message));
+});
+
+export const updateAllowedUsers = functions.pubsub.schedule('every monday 09:00').onRun((context) => {
+    return admin.firestore().collection('/allowed-emails')
+        .get()
+        .then(snapshot => snapshot.docs.map(doc => doc.data()))
+        .then(data => {
+            data.forEach(allowed => {
+                const email: string = allowed.email;
+                admin
+                    .auth()
+                    .getUserByEmail(email)
+                    .then(user => setClaims(user, allowed))
+                    .catch(error => console.warn(error.message,': ', allowed.email));
+            });
         });
 });
