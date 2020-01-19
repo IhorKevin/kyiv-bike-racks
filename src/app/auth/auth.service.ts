@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/auth";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {User, auth} from "firebase/app";
 import {map, switchMap} from 'rxjs/operators';
 
@@ -39,8 +39,12 @@ export class AuthService {
 
     private getCustomClaims(): Observable<{[key: string]: boolean}> {
         return this.user
-            .pipe(switchMap(user => user.getIdTokenResult()))
-            .pipe(map(result => result.claims));
+            .pipe(switchMap(user => {
+                return user ? user.getIdTokenResult() : of(null);
+            }))
+            .pipe(map(result => {
+                return result ? result.claims : {};
+            }));
     }
 
 }
