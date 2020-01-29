@@ -195,6 +195,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             .catch(error => this.snackBar.open(error.message, 'OK'));
     }
 
+    trackByRackId(index: number, item: BikeRack) {
+        return item.id;
+    }
+
     private panToRackWithOffset(rack: BikeRack): void {
 
         // displays selected marker not in the map center but closer to top of the view
