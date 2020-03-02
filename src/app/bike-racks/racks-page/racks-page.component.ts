@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSelectionListChange} from "@angular/material/list";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {AngularFirestore, CollectionReference, Query, QueryFn} from "@angular/fire/firestore";
 import {BehaviorSubject, Observable} from "rxjs";
 import {switchMap, map, shareReplay, debounceTime} from 'rxjs/operators';
@@ -10,7 +11,6 @@ import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
 import {FilterSettings} from "../settings";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 const settingsKey: string = 'racks_settings';
 
@@ -145,12 +145,20 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     onRackSelect(rack: BikeRack): void {
         this.router.navigate(['.'], {
             relativeTo: this.route,
-            queryParams: {rack_id: rack.id}
+            queryParams: {rack_id: rack.id},
+            state: {
+                title: rack.title || rack.owner_name || rack.street_address
+            }
         });
     }
 
     clearRack(event?: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
-        this.router.navigate(['.'], {relativeTo: this.route});
+        this.router.navigate(['.'], {
+            relativeTo: this.route,
+            state: {
+                title: ''
+            }
+        });
     }
 
     logout(): void {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {RacksPageComponent} from './racks-page/racks-page.component';
+import { RackResolver } from "../services/rack.resolver";
 
 
 const routes: Routes = [{
@@ -8,11 +9,14 @@ const routes: Routes = [{
     component: RacksPageComponent,
     data: {
         title: 'Карта'
+    },
+    resolve: {
+        rack: RackResolver
     }
 }];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
+    imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
 export class BikeRacksRoutingModule { }

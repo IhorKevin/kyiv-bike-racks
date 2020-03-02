@@ -3,7 +3,7 @@
     <mat-card-content class="rack-details__body">
         <mat-card-title>
             <mat-icon *ngIf="rack.is_private" [inline]="true" title="Службова">policy</mat-icon>
-            {{rack.title || rack.street_address || rack.owner_name}}
+            {{rack.title || rack.owner_name || rack.street_address}}
         </mat-card-title>
         <a mat-fab color="primary" class="mat-elevation-z1 rack-details__route-button" [href]="rack.coords | googleMaps" target="_blank">
             <mat-icon>directions</mat-icon>
