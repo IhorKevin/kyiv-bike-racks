@@ -22,7 +22,7 @@ const settingsKey: string = 'racks_settings';
 export class RacksPageComponent implements OnInit, AfterViewInit {
 
     userPosition: Position;
-    zoom: number = 15;
+    zoom: number = 16;
 
     mapOptions: google.maps.MapOptions;
     markerOptions: MarkerOptionsSet;
@@ -210,7 +210,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     configMarker(rack: BikeRack, active?: boolean): google.maps.MarkerOptions {
         const type = rack.is_sheffield ? 'primary' : 'secondary';
-        const size = 'lg'; // define by current zoom
+        const currentZoom: number = this.mapRef.getZoom();
+        const size = currentZoom < this.zoom ? 'sm' : 'lg';
         const state = active ? 'active' : 'default';
         return this.markersService.getRackMarker(type, size, state);
     }

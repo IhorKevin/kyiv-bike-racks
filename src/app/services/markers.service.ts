@@ -62,7 +62,8 @@ export class MarkersService {
             hint: {
                 icon: this.getHintIcon(),
                 visible: true,
-                clickable: false
+                clickable: false,
+                zIndex: 0
             }
         }
     }
