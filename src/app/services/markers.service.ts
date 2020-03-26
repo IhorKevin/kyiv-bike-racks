@@ -7,8 +7,6 @@ export type RackHint = [number, number];
 export interface MarkerOptionsSet {
     userLocation: google.maps.MarkerOptions;
     hint: google.maps.MarkerOptions;
-    rack: google.maps.MarkerOptions;
-    rackLow: google.maps.MarkerOptions;
 }
 
 @Injectable({
@@ -35,10 +33,6 @@ export class MarkersService {
 
     getUserLocationIcon(): string {
         return this.folder + 'user-location.svg';
-    }
-
-    getRackIcon(style: 'default' | 'low'): string {
-        return `${this.folder}rack-marker-${style}.png`;
     }
 
     getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): google.maps.MarkerOptions {
@@ -69,14 +63,6 @@ export class MarkersService {
                 icon: this.getHintIcon(),
                 visible: true,
                 clickable: false
-            },
-            rack: {
-                icon: this.getRackIcon('default'),
-                visible: true
-            },
-            rackLow: {
-                icon: this.getRackIcon('low'),
-                visible: true
             }
         }
     }

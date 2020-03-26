@@ -40,6 +40,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
+    private readonly locationZoom = 18;
     private settingsChange: BehaviorSubject<FilterSettings>;
 
     constructor(
@@ -129,7 +130,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             });
-            this.mapRef.zoom = this.maxZoom;
+            this.mapRef.zoom = this.locationZoom;
             this.userPosition = position;
         };
         const onReject = () => {
