@@ -12,7 +12,7 @@
     <map-marker
         *ngFor="let rack of racks | async; trackBy: trackByRackId"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
-        [options]="rack.is_sheffield ? markerOptions.rack: markerOptions.rackLow"
+        [options]="configMarker(rack)"
         (mapClick)="onRackSelect(rack)"
     ></map-marker>
     <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="markerOptions.userLocation"></map-marker>

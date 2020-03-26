@@ -207,6 +207,13 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         return item.id;
     }
 
+    configMarker(rack: BikeRack): google.maps.MarkerOptions {
+        const type = rack.is_sheffield ? 'primary' : 'secondary';
+        const size = 'lg'; // define by current zoom
+        const state = 'default';
+        return this.markersService.getRackMarker(type, size, state);
+    }
+
     private panToRackWithOffset(rack: BikeRack): void {
 
         // displays selected marker not in the map center but closer to top of the view

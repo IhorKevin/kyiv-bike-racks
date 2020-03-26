@@ -41,8 +41,11 @@ export class MarkersService {
         return `${this.folder}rack-marker-${style}.png`;
     }
 
-    getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): string {
-        return `${this.rackMarkersFolder}${type}-${size}-${state}.svg`;
+    getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): google.maps.MarkerOptions {
+        return {
+            icon: `${this.rackMarkersFolder}${type}-${size}-${state}.svg`,
+            visible: true
+        };
     }
 
     options(): MarkerOptionsSet {
