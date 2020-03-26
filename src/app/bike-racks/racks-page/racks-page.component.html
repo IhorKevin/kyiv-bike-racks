@@ -10,6 +10,11 @@
         <map-marker *ngFor="let hint of hints | async" [position]="{lat: hint[1], lng: hint[0]}" [options]="markerOptions.hint"></map-marker>
     </ng-container>
     <map-marker
+        *ngIf="selectedRack | async as rack"
+        [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
+        [options]="configMarker(rack,true)"
+    ></map-marker>
+    <map-marker
         *ngFor="let rack of racks | async; trackBy: trackByRackId"
         [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
         [options]="configMarker(rack)"

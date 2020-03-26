@@ -207,10 +207,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         return item.id;
     }
 
-    configMarker(rack: BikeRack): google.maps.MarkerOptions {
+    configMarker(rack: BikeRack, active?: boolean): google.maps.MarkerOptions {
         const type = rack.is_sheffield ? 'primary' : 'secondary';
         const size = 'lg'; // define by current zoom
-        const state = 'default';
+        const state = active ? 'active' : 'default';
         return this.markersService.getRackMarker(type, size, state);
     }
 

@@ -42,9 +42,18 @@ export class MarkersService {
     }
 
     getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): google.maps.MarkerOptions {
+
+        let zIndex: number = 1;
+        if(type == 'primary') zIndex = 2;
+        const isActive = state == 'active';
+        if(isActive) zIndex = 3;
+
         return {
             icon: `${this.rackMarkersFolder}${type}-${size}-${state}.svg`,
-            visible: true
+            visible: true,
+            optimized: true,
+            zIndex: zIndex,
+            clickable: !isActive
         };
     }
 
@@ -53,7 +62,8 @@ export class MarkersService {
             userLocation: {
                 icon: this.getUserLocationIcon(),
                 visible: true,
-                clickable: false
+                clickable: false,
+                optimized: false
             },
             hint: {
                 icon: this.getHintIcon(),
