@@ -17,6 +17,7 @@ export interface MarkerOptionsSet {
 export class MarkersService {
 
     readonly folder: string = '/assets/map-markers/';
+    readonly rackMarkersFolder: string = '/assets/rack-markers/';
     private hints: RackHint[];
 
     constructor(private http: HttpClient) {}
@@ -38,6 +39,10 @@ export class MarkersService {
 
     getRackIcon(style: 'default' | 'low'): string {
         return `${this.folder}rack-marker-${style}.png`;
+    }
+
+    getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): string {
+        return `${this.rackMarkersFolder}${type}-${size}-${state}.svg`;
     }
 
     options(): MarkerOptionsSet {
