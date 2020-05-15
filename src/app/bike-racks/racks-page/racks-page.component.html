@@ -5,6 +5,7 @@
     [width]="'inherit'"
     [height]="'inherit'"
     (mapClick)="clearRack($event)"
+    (zoomChanged)="onZoom()"
 >
     <map-marker
         *ngIf="selectedRack | async as rack"

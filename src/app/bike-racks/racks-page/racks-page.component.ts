@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild, AfterViewInit, TemplateRef} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {GoogleMap} from "@angular/google-maps";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSelectionListChange} from "@angular/material/list";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AngularFirestore, CollectionReference, Query, QueryFn} from "@angular/fire/firestore";
 import {BehaviorSubject, Observable} from "rxjs";
-import {switchMap, map, shareReplay, debounceTime} from 'rxjs/operators';
+import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
 import {BikeRack} from "../bike-rack";
 import {AuthService} from "../../auth/auth.service";
 import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
@@ -17,7 +17,8 @@ const settingsKey: string = 'racks_settings';
 @Component({
     selector: 'app-racks-page',
     templateUrl: './racks-page.component.html',
-    styleUrls: ['./racks-page.component.styl']
+    styleUrls: ['./racks-page.component.styl'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {
 
@@ -51,7 +52,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private markersService: MarkersService,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private cdr: ChangeDetectorRef
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -140,7 +142,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         this.geoService
             .getUserPosition()
             .then(onSuccess)
-            .catch(onReject);
+            .catch(onReject)
+            .finally(() => this.cdr.markForCheck());
     }
 
     onRackSelect(rack: BikeRack): void {
@@ -160,6 +163,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
                 title: ''
             }
         });
+    }
+
+    onZoom(): void {
+        this.cdr.markForCheck();
     }
 
     logout(): void {
