@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { AngularFireModule, FirebaseOptions } from '@angular/fire';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
+import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -19,7 +20,8 @@ const fireConfig: FirebaseOptions = {
     projectId: "kyiv-bike-racks",
     storageBucket: "kyiv-bike-racks.appspot.com",
     messagingSenderId: "508604373840",
-    appId: "1:508604373840:web:574cee9c0c89a48965aa55"
+    appId: "1:508604373840:web:574cee9c0c89a48965aa55",
+    measurementId: "G-4L7TLKRYXE"
 };
 
 @NgModule({
@@ -32,6 +34,7 @@ const fireConfig: FirebaseOptions = {
         AngularFireModule.initializeApp(fireConfig),
         AngularFireAuthModule,
         AngularFireAuthGuardModule,
+        AngularFireAnalyticsModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         BikeRacksModule,
         AuthModule,
