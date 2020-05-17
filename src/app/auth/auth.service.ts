@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {Observable, of} from "rxjs";
+import 'firebase/auth';
 import {User, auth} from "firebase/app";
 import {map, switchMap} from 'rxjs/operators';
 
@@ -28,13 +29,13 @@ export class AuthService {
     }
 
     login(): Promise<auth.UserCredential> {
-        return this.fireAuth.auth
+        return this.fireAuth
             .setPersistence(auth.Auth.Persistence.LOCAL)
-            .then(() => this.fireAuth.auth.signInWithPopup(new auth.GoogleAuthProvider()));
+            .then(() => this.fireAuth.signInWithPopup(new auth.GoogleAuthProvider()));
     }
 
     logout(): Promise<void> {
-        return this.fireAuth.auth.signOut();
+        return this.fireAuth.signOut();
     }
 
     private getCustomClaims(): Observable<{[key: string]: boolean}> {
