@@ -47,6 +47,8 @@
             "aot": true,
             "assets": [
               "src/favicon-32x32.png",
+              "src/og-preview.jpg",
+              "src/robots.txt",
               "src/assets",
               "src/manifest.webmanifest"
             ],
@@ -115,6 +117,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon-32x32.png",
+              "src/og-preview.jpg",
+              "src/robots.txt",
               "src/assets",
               "src/manifest.webmanifest"
             ],
