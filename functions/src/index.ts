@@ -67,7 +67,7 @@ export const onAuth = functions.auth.user().onCreate((user, context) => {
         .catch(error => console.warn(error.message));
 });
 
-export const updateAllowedUsers = functions.pubsub.schedule('every monday 09:00').onRun((context) => {
+export const updateAllowedUsers = functions.pubsub.schedule('every sunday 20:00').onRun((context) => {
     return admin.firestore().collection('/allowed-emails')
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
@@ -77,9 +77,40 @@ export const updateAllowedUsers = functions.pubsub.schedule('every monday 09:00'
                 admin
                     .auth()
                     .getUserByEmail(email)
-                    .then(user => setClaims(user, allowed))
+                    .then(user => {
+                        if(user) setClaims(user, allowed);
+                    })
                     .catch(error => console.warn(error.message,': ', allowed.email));
             });
+        });
+});
+
+export const calculateTotals = functions.pubsub.schedule('every sunday 21:00').onRun((context) => {
+    return admin.firestore().collection('/racks')
+        .get()
+        .then(snapshot => snapshot.docs.map(doc => doc.data()))
+        .then(data => {
+
+            const sumCapacity = (racks: any[]): number => racks.reduce((acc, value) => {
+                return acc + (value.capacity || 2);
+            }, 0);
+
+            const sheffieldRacks = data.filter(r => !!r.is_sheffield);
+            const anyRacks = data.filter(r => !r.is_sheffield);
+            const statRecord = {
+                date: admin.firestore.Timestamp.now(),
+                sheffieldRacks: sheffieldRacks.length,
+                sheffieldCapacity: sumCapacity(sheffieldRacks),
+                anyRacks: anyRacks.length,
+                anyCapacity: sumCapacity(anyRacks),
+                totalRacks: data.length,
+                totalCapacity: sumCapacity(data)
+            };
+
+            admin.firestore().collection('/stats')
+                .add(statRecord)
+                .then(() => console.log('Stat record saved successfully.'))
+                .catch(error => console.log(error));
         });
 });
 
