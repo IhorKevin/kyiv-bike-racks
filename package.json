@@ -29,7 +29,7 @@
     "@angular/core": "~10.1.0",
     "@angular/fire": "^6.0.0",
     "@angular/forms": "~10.1.0",
-    "@angular/google-maps": "^9.2.0",
+    "@angular/google-maps": "^10.2.0",
     "@angular/material": "^10.2.0",
     "@angular/platform-browser": "~10.1.0",
     "@angular/platform-browser-dynamic": "~10.1.0",
