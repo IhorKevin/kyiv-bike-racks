@@ -13,7 +13,7 @@ import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
 import {GoogleMap} from "@angular/google-maps";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {debounceTime, takeUntil} from "rxjs/operators";
-import {firestore} from 'firebase/app';
+import firebase from 'firebase/app';
 import {BikeRack} from "../../bike-racks";
 
 const latitudeMin = -90;
@@ -86,8 +86,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             const formValue = this.form.value;
             this.form.disable();
             const payload: BikeRack = {
-                coords: new firestore.GeoPoint(formValue.latitude, formValue.longitude),
-                created_at: this.rack.created_at || firestore.Timestamp.now(),
+                coords: new firebase.firestore.GeoPoint(formValue.latitude, formValue.longitude),
+                created_at: this.rack.created_at || firebase.firestore.Timestamp.now(),
                 capacity: formValue.capacity,
                 title: formValue.title,
                 street_address: formValue.street_address,

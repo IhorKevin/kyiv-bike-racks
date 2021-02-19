@@ -3,7 +3,7 @@ import {AngularFirestore} from "@angular/fire/firestore";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BikeRack} from "../../bike-racks";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {firestore} from 'firebase/app';
+import firebase from 'firebase/app';
 
 @Component({
     selector: 'app-edit-page',
@@ -42,7 +42,7 @@ export class EditPageComponent implements OnInit {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
                 this.router.navigate(['/racks'], {queryParams: {center}});
             })
-            .catch((error: firestore.FirestoreError) => {
+            .catch((error: firebase.firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
             })
     }
