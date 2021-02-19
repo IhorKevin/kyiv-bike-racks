@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/auth";
 import {Observable, of} from "rxjs";
 import 'firebase/auth';
-import {User, auth} from "firebase/app";
+import firebase from "firebase/app";
 import {map, switchMap} from 'rxjs/operators';
 
 @Injectable({
@@ -10,7 +10,7 @@ import {map, switchMap} from 'rxjs/operators';
 })
 export class AuthService {
 
-    user: Observable<User | null>;
+    user: Observable<firebase.User | null>;
 
     constructor(private fireAuth: AngularFireAuth) {
         this.user = this.fireAuth.user;
@@ -28,10 +28,10 @@ export class AuthService {
         return this.getCustomClaims().pipe(map(claims => claims.admin));
     }
 
-    login(): Promise<auth.UserCredential> {
+    login(): Promise<firebase.auth.UserCredential> {
         return this.fireAuth
-            .setPersistence(auth.Auth.Persistence.LOCAL)
-            .then(() => this.fireAuth.signInWithPopup(new auth.GoogleAuthProvider()));
+            .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()));
     }
 
     logout(): Promise<void> {

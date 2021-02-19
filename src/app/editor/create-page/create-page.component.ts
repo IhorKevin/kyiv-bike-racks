@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {firestore} from 'firebase/app';
+import firebase from 'firebase/app';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {AngularFirestore} from "@angular/fire/firestore";
@@ -30,7 +30,7 @@ export class CreatePageComponent implements OnInit {
             })
             .then(position => {
                 this.initialRack = {
-                    coords: new firestore.GeoPoint(position.coords.latitude, position.coords.longitude),
+                    coords: new firebase.firestore.GeoPoint(position.coords.latitude, position.coords.longitude),
                     created_at: null
                 };
             })
@@ -38,7 +38,7 @@ export class CreatePageComponent implements OnInit {
                 const message = error.code == error.PERMISSION_DENIED ? 'Дозвольте сайту отримати ваше місце знаходження, щоб додавати велопарковки на карту' : error.message;
                 this.snackBar.open(message, null, {duration: 5000});
                 this.initialRack = {
-                    coords: new firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng),
+                    coords: new firebase.firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng),
                     created_at: null
                 };
             });
@@ -52,7 +52,7 @@ export class CreatePageComponent implements OnInit {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
                 this.router.navigate(['/racks'], {queryParams: {center}});
             })
-            .catch((error: firestore.FirestoreError) => {
+            .catch((error: firebase.firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
             })
     }
