@@ -7,7 +7,7 @@ export class GeoService {
 
     constructor() { }
 
-    getUserPosition(options?: PositionOptions): Promise<Position> {
+    getUserPosition(options?: PositionOptions): Promise<GeolocationPosition> {
         return new Promise((resolve, reject) => {
             if(!navigator.geolocation) reject(new Error('Пристрій не підтримує геологацію'));
             navigator.geolocation.getCurrentPosition(resolve, reject, options);

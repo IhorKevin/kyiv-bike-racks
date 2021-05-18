@@ -34,7 +34,7 @@ export class CreatePageComponent implements OnInit {
                     created_at: null
                 };
             })
-            .catch((error: PositionError) => {
+            .catch((error: GeolocationPositionError) => {
                 const message = error.code == error.PERMISSION_DENIED ? 'Дозвольте сайту отримати ваше місце знаходження, щоб додавати велопарковки на карту' : error.message;
                 this.snackBar.open(message, null, {duration: 5000});
                 this.initialRack = {
@@ -54,7 +54,7 @@ export class CreatePageComponent implements OnInit {
             })
             .catch((error: firebase.firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
-            })
+            });
     }
 
     back(): void {

@@ -22,7 +22,7 @@ const settingsKey: string = 'racks_settings';
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {
 
-    userPosition: Position;
+    userPosition: GeolocationPosition;
     zoom: number = 16;
 
     mapOptions: google.maps.MapOptions;
