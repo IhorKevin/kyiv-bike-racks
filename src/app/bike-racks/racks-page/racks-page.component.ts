@@ -1,16 +1,16 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {GoogleMap} from "@angular/google-maps";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSelectionListChange} from "@angular/material/list";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {AngularFirestore, CollectionReference, Query, QueryFn} from "@angular/fire/firestore";
-import {BehaviorSubject, Observable} from "rxjs";
+import {GoogleMap} from '@angular/google-maps';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSelectionListChange} from '@angular/material/list';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {AngularFirestore, CollectionReference, Query, QueryFn} from '@angular/fire/firestore';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
-import {BikeRack} from "../bike-rack";
-import {AuthService} from "../../auth/auth.service";
-import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
-import {FilterSettings} from "../settings";
+import {BikeRack} from '../bike-rack';
+import {AuthService} from '../../auth/auth.service';
+import {GeoService, MarkerOptionsSet, MarkersService} from '../../services';
+import {FilterSettings} from '../settings';
 
 const settingsKey: string = 'racks_settings';
 
@@ -33,7 +33,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     isLoggedIn: Observable<boolean>;
     isEditor: Observable<boolean>;
     isAdmin: Observable<boolean>;
-    hints: Observable<RackHint[]>;
 
     settings: FilterSettings;
 
@@ -86,7 +85,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             }));
 
         this.markerOptions = this.markersService.options();
-        this.hints = this.markersService.getHints();
         this.isLoggedIn = this.auth.isAuthenticated();
         this.isEditor = this.auth.isEditor();
         this.isAdmin = this.auth.isAdmin();
