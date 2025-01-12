@@ -63,7 +63,7 @@ const setClaims = (uid: string, allowed: {[key: string]: any}) => {
     return appAuth.setCustomUserClaims(uid, claims);
 };
 
-export const onAuth = () => auth.user().onCreate((user) => {
+export const onAuth = auth.user().onCreate((user) => {
     const email = user.email;
     return firestore.collection('/allowed-emails')
         .get()
@@ -94,7 +94,7 @@ export const updateAllowedUsers = onSchedule('every sunday 20:00', () => {
         });
 });
 
-export const calculateTotals = () => onSchedule('every sunday 21:00', () => {
+export const calculateTotals = onSchedule('every sunday 21:00', () => {
     return firestore.collection('/racks')
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
