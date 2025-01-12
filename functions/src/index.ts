@@ -1,25 +1,31 @@
-import * as functions from 'firebase-functions';
-import {Storage} from '@google-cloud/storage';
-import {tmpdir} from 'os';
-import {basename, dirname, join} from 'path';
-import * as sharp from 'sharp';
-import admin = require('firebase-admin');
+import { initializeApp } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
+import { onObjectFinalized } from 'firebase-functions/storage';
+import { onSchedule } from 'firebase-functions/scheduler';
+import { onDocumentCreated } from 'firebase-functions/firestore';
+import { auth } from 'firebase-functions/v1';
+import { tmpdir } from 'os';
+import { basename, dirname, join } from 'path';
+import sharp from 'sharp';
 
-admin.initializeApp();
+const app = initializeApp();
+const storage = getStorage(app);
+const firestore = getFirestore(app);
+const appAuth = getAuth(app);
 
-const storage = new Storage();
-export const resizeImage = functions.storage.object().onFinalize((metadata) => {
-    const filePath = metadata.name || '/racks-photo/placeholder.jpg';
+export const resizeImage = onObjectFinalized((event) => {
+    const filePath = event.data.name || '/racks-photo/placeholder.jpg';
     const fileName = basename(filePath);
-    const bucket = metadata.bucket;
     const bucketDir = dirname(filePath);
     const workingDir = tmpdir();
     const isOriginal = () => bucketDir.includes('original');
-
-    if(isOriginal()) {
+    if (isOriginal()) {
         const tmpFilePath = join(workingDir, fileName);
         const tmpThumbFilePath = join(workingDir, 'thumb-' + fileName) ;
-        const destBucket = storage.bucket(bucket);
+        const destBucket = storage.bucket();
+
         return destBucket
             .file(filePath)
             .download({
@@ -28,7 +34,7 @@ export const resizeImage = functions.storage.object().onFinalize((metadata) => {
             .then(() => {
                 return sharp(tmpFilePath)
                     .withMetadata()
-                    .resize(1024, 1024, {fit: "inside"})
+                    .resize(1024, 1024, { fit: 'inside' })
                     .jpeg({
                         quality: 65,
                         progressive: true
@@ -42,51 +48,52 @@ export const resizeImage = functions.storage.object().onFinalize((metadata) => {
             })
             .catch(error => console.log(error));
     }
-    else return;
-
+    else {
+        return;
+    }
 });
 
-function setClaims(user: admin.auth.UserRecord, allowed: {[key: string]: any}) {
+function setClaims(uid: string, allowed: {[key: string]: any}) {
     const claims = {
         editor: allowed.editor,
         admin: allowed.admin
     };
-    return admin.auth().setCustomUserClaims(user.uid, claims);
+    return appAuth.setCustomUserClaims(uid, claims);
 }
 
-export const onAuth = functions.auth.user().onCreate((user, context) => {
+export const onAuth = () => auth.user().onCreate((user) => {
     const email = user.email;
-    return admin.firestore().collection('/allowed-emails')
+    return firestore.collection('/allowed-emails')
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
         .then(data => {
-            const current = data.find(docData => docData.email == email);
-            if(current) setClaims(user, current);
-            else console.warn('User with email', email, 'is not in access list');
+            const current = data.find(docData => docData.email === email);
+            if (current) {
+                setClaims(user.uid, current);
+            }
+            else {
+                console.warn('User with email', email, 'is not in access list');
+            }
         })
         .catch(error => console.warn(error.message));
 });
 
-export const updateAllowedUsers = functions.pubsub.schedule('every sunday 20:00').onRun((context) => {
-    return admin.firestore().collection('/allowed-emails')
+export const updateAllowedUsers = onSchedule('every sunday 20:00', () => {
+    return firestore.collection('/allowed-emails')
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
         .then(data => {
             data.forEach(allowed => {
                 const email: string = allowed.email;
-                admin
-                    .auth()
-                    .getUserByEmail(email)
-                    .then(user => {
-                        if(user) setClaims(user, allowed);
-                    })
-                    .catch(error => console.warn(error.message,': ', allowed.email));
+                appAuth.getUserByEmail(email)
+                    .then(user => setClaims(user.uid, allowed))
+                    .catch(error => console.warn(error.message, ': ', allowed.email));
             });
         });
 });
 
-export const calculateTotals = functions.pubsub.schedule('every sunday 21:00').onRun((context) => {
-    return admin.firestore().collection('/racks')
+export const calculateTotals = () => onSchedule('every sunday 21:00', () => {
+    return firestore.collection('/racks')
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
         .then(data => {
@@ -98,7 +105,7 @@ export const calculateTotals = functions.pubsub.schedule('every sunday 21:00').o
             const sheffieldRacks = data.filter(r => !!r.is_sheffield);
             const anyRacks = data.filter(r => !r.is_sheffield);
             const statRecord = {
-                date: admin.firestore.Timestamp.now(),
+                date: Timestamp.now(),
                 sheffieldRacks: sheffieldRacks.length,
                 sheffieldCapacity: sumCapacity(sheffieldRacks),
                 anyRacks: anyRacks.length,
@@ -107,17 +114,17 @@ export const calculateTotals = functions.pubsub.schedule('every sunday 21:00').o
                 totalCapacity: sumCapacity(data)
             };
 
-            admin.firestore().collection('/stats')
+            firestore.collection('/stats')
                 .add(statRecord)
                 .then(() => console.log('Stat record saved successfully.'))
                 .catch(error => console.log(error));
         });
 });
 
-export const logNewRacks = functions.firestore.document('/racks/{id}').onCreate((snapshot, context) => {
-    const link = 'https://kyiv-bike-racks.web.app/racks?rack_id=' + context.params.id;
+export const logNewRacks = onDocumentCreated('/racks/{id}', (event) => {
+    const link = 'https://kyiv-bike-racks.web.app/racks?rack_id=' + event.params.id;
     const email = 'unknown';
     const message = `User ${email} created rack ${link}`;
-    console.info(message);
+    console.log(message);
     return message;
 });
