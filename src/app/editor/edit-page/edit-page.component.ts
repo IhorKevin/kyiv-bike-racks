@@ -8,16 +8,16 @@ import firebase from 'firebase/app';
 @Component({
     selector: 'app-edit-page',
     templateUrl: './edit-page.component.html',
-    styleUrls: ['./edit-page.component.styl']
+    styleUrls: ['./edit-page.component.scss']
 })
 export class EditPageComponent implements OnInit {
 
     rack: BikeRack;
 
     constructor(
-        private store: AngularFirestore, 
-        private router: Router, 
-        private route: ActivatedRoute, 
+        private store: AngularFirestore,
+        private router: Router,
+        private route: ActivatedRoute,
         private snackBar: MatSnackBar
     ) { }
 

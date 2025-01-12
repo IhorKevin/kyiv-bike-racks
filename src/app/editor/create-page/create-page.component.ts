@@ -9,7 +9,7 @@ import {GeoService} from "../../services";
 @Component({
     selector: 'app-create-page',
     templateUrl: './create-page.component.html',
-    styleUrls: ['./create-page.component.styl']
+    styleUrls: ['./create-page.component.scss']
 })
 export class CreatePageComponent implements OnInit {
 

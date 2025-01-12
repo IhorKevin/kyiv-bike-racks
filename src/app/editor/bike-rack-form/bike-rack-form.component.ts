@@ -24,7 +24,7 @@ const longitudeMax = 180;
 @Component({
     selector: 'app-bike-rack-form',
     templateUrl: './bike-rack-form.component.html',
-    styleUrls: ['./bike-rack-form.component.styl'],
+    styleUrls: ['./bike-rack-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BikeRackFormComponent implements OnInit, OnDestroy {

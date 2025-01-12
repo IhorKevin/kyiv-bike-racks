@@ -17,7 +17,7 @@ const settingsKey: string = 'racks_settings';
 @Component({
     selector: 'app-racks-page',
     templateUrl: './racks-page.component.html',
-    styleUrls: ['./racks-page.component.styl'],
+    styleUrls: ['./racks-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {

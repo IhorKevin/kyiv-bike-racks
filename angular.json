@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "styl",
+          "style": "scss",
           "skipTests": true
         },
         "@schematics/angular:class": {
@@ -53,7 +53,7 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.styl"
+              "src/styles.scss"
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -127,7 +127,7 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/styles.styl"
+              "src/styles.scss"
             ],
             "scripts": []
           }
