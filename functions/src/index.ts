@@ -15,7 +15,7 @@ const storage = getStorage(app);
 const firestore = getFirestore(app);
 const appAuth = getAuth(app);
 
-export const resizeImage = onObjectFinalized((event) => {
+export const resizeImage = onObjectFinalized('europe-west3', (event) => {
     const filePath = event.data.name || '/racks-photo/placeholder.jpg';
     const fileName = basename(filePath);
     const bucketDir = dirname(filePath);
