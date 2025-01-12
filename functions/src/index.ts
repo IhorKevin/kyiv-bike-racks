@@ -23,7 +23,7 @@ export const resizeImage = onObjectFinalized((event) => {
     const isOriginal = () => bucketDir.includes('original');
     if (isOriginal()) {
         const tmpFilePath = join(workingDir, fileName);
-        const tmpThumbFilePath = join(workingDir, 'thumb-' + fileName) ;
+        const tmpThumbFilePath = join(workingDir, 'thumb-' + fileName);
         const destBucket = storage.bucket();
 
         return destBucket
@@ -53,13 +53,13 @@ export const resizeImage = onObjectFinalized((event) => {
     }
 });
 
-function setClaims(uid: string, allowed: {[key: string]: any}) {
+const setClaims = (uid: string, allowed: {[key: string]: any}) => {
     const claims = {
         editor: allowed.editor,
         admin: allowed.admin
     };
     return appAuth.setCustomUserClaims(uid, claims);
-}
+};
 
 export const onAuth = () => auth.user().onCreate((user) => {
     const email = user.email;
@@ -97,7 +97,6 @@ export const calculateTotals = () => onSchedule('every sunday 21:00', () => {
         .get()
         .then(snapshot => snapshot.docs.map(doc => doc.data()))
         .then(data => {
-
             const sumCapacity = (racks: any[]): number => racks.reduce((acc, value) => {
                 return acc + (value.capacity || 2);
             }, 0);
