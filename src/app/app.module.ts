@@ -1,27 +1,28 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from "@angular/common/http";
-import { AngularFireModule, FirebaseOptions } from '@angular/fire';
+import { HttpClientModule } from '@angular/common/http';
+import type { FirebaseOptions } from '@angular/fire/app';
+import { AngularFireModule } from '@angular/fire/compat';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { AngularFireAuthModule } from "@angular/fire/auth";
-import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard';
-import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireAuthGuardModule } from '@angular/fire/compat/auth-guard';
+import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { BikeRacksModule } from "./bike-racks/bike-racks.module";
+import { BikeRacksModule } from './bike-racks/bike-racks.module';
 import { AuthModule } from './auth/auth.module';
 
 const fireConfig: FirebaseOptions = {
-    apiKey: "AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI",
-    authDomain: "kyiv-bike-racks.firebaseapp.com",
-    databaseURL: "https://kyiv-bike-racks.firebaseio.com",
-    projectId: "kyiv-bike-racks",
-    storageBucket: "kyiv-bike-racks.appspot.com",
-    messagingSenderId: "508604373840",
-    appId: "1:508604373840:web:574cee9c0c89a48965aa55",
-    measurementId: "G-4L7TLKRYXE"
+    apiKey: 'AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI',
+    authDomain: 'kyiv-bike-racks.firebaseapp.com',
+    databaseURL: 'https://kyiv-bike-racks.firebaseio.com',
+    projectId: 'kyiv-bike-racks',
+    storageBucket: 'kyiv-bike-racks.appspot.com',
+    messagingSenderId: '508604373840',
+    appId: '1:508604373840:web:574cee9c0c89a48965aa55',
+    measurementId: 'G-4L7TLKRYXE'
 };
 
 @NgModule({

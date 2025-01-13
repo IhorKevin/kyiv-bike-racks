@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {BikeRack} from "../bike-rack";
+import {BikeRack} from '../bike-rack';
 
 @Component({
     selector: 'app-rack-card',

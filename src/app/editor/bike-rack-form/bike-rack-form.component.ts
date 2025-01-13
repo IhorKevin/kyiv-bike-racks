@@ -8,13 +8,13 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AngularFireStorage, AngularFireUploadTask} from "@angular/fire/storage";
-import {GoogleMap} from "@angular/google-maps";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {debounceTime, takeUntil} from "rxjs/operators";
-import firebase from 'firebase/app';
-import {BikeRack} from "../../bike-racks";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AngularFireStorage, AngularFireUploadTask} from '@angular/fire/compat/storage';
+import {GoogleMap} from '@angular/google-maps';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {debounceTime, takeUntil} from 'rxjs/operators';
+import firebase from 'firebase/compat/app';
+import {BikeRack} from '../../bike-racks';
 
 const latitudeMin = -90;
 const latitudeMax = 90;
@@ -67,7 +67,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             fullscreenControl: false,
             mapTypeControl: false,
             clickableIcons: false,
-            gestureHandling: "greedy"
+            gestureHandling: 'greedy'
         };
         this.buildForm(this.rack);
         if(this.rack.photo) this.previewSrc.next(this.rack.photo);

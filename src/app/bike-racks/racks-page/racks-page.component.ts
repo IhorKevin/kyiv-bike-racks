@@ -4,7 +4,7 @@ import {GoogleMap} from '@angular/google-maps';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSelectionListChange} from '@angular/material/list';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {AngularFirestore, CollectionReference, Query, QueryFn} from '@angular/fire/firestore';
+import {AngularFirestore, CollectionReference, Query, QueryFn} from '@angular/fire/compat/firestore';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
 import {BikeRack} from '../bike-rack';

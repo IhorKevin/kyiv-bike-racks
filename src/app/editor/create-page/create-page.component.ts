@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import firebase from 'firebase/app';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {BikeRack} from "../../bike-racks";
-import {GeoService} from "../../services";
+import firebase from 'firebase/compat/app';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {BikeRack} from '../../bike-racks';
+import {GeoService} from '../../services';
 
 @Component({
     selector: 'app-create-page',
@@ -35,7 +35,7 @@ export class CreatePageComponent implements OnInit {
                 };
             })
             .catch((error: GeolocationPositionError) => {
-                const message = error.code == error.PERMISSION_DENIED ? 'Дозвольте сайту отримати ваше місце знаходження, щоб додавати велопарковки на карту' : error.message;
+                const message = error.code === error.PERMISSION_DENIED ? 'Дозвольте сайту отримати ваше місце знаходження, щоб додавати велопарковки на карту' : error.message;
                 this.snackBar.open(message, null, {duration: 5000});
                 this.initialRack = {
                     coords: new firebase.firestore.GeoPoint(GeoService.KyivCenterCoords.lat, GeoService.KyivCenterCoords.lng),

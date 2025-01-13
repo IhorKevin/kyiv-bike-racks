@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Observable, of} from "rxjs";
-import {BikeRack} from "../bike-racks";
-import {map, take} from "rxjs/operators";
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {Observable, of} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+import {BikeRack} from '../bike-racks';
 
 @Injectable({
     providedIn: 'root'

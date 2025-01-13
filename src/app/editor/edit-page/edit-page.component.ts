@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {AngularFirestore} from "@angular/fire/firestore";
-import {ActivatedRoute, Router} from "@angular/router";
-import {BikeRack} from "../../bike-racks";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import firebase from 'firebase/app';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {ActivatedRoute, Router} from '@angular/router';
+import firebase from 'firebase/compat/app';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {BikeRack} from '../../bike-racks';
 
 @Component({
     selector: 'app-edit-page',
@@ -44,7 +44,7 @@ export class EditPageComponent implements OnInit {
             })
             .catch((error: firebase.firestore.FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
-            })
+            });
     }
 
     back(): void {
