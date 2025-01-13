@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import {Observable, of} from 'rxjs';
-import 'firebase/auth';
-import firebase from 'firebase/compat/app';
-import {map, switchMap} from 'rxjs/operators';
+import {
+    Auth,
+    GoogleAuthProvider,
+    signOut,
+    signInWithPopup,
+    User,
+    browserLocalPersistence,
+    user,
+} from '@angular/fire/auth';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
 
-    user: Observable<firebase.User | null>;
+    user: Observable<User | null>;
 
-    constructor(private fireAuth: AngularFireAuth) {
-        this.user = this.fireAuth.user;
+    constructor(private fireAuth: Auth) {
+        this.user = user(this.fireAuth);
     }
 
     isAuthenticated(): Observable<boolean> {
-        return this.user.pipe(map(user => Boolean(user)));
+        return this.user.pipe(map(Boolean));
     }
 
     isEditor(): Observable<boolean> {
@@ -28,14 +34,13 @@ export class AuthService {
         return this.getCustomClaims().pipe(map(claims => claims.admin));
     }
 
-    login(): Promise<firebase.auth.UserCredential> {
-        return this.fireAuth
-            .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(() => this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()));
+    async login() {
+        await this.fireAuth.setPersistence(browserLocalPersistence);
+        return signInWithPopup(this.fireAuth, new GoogleAuthProvider());
     }
 
     logout(): Promise<void> {
-        return this.fireAuth.signOut();
+        return signOut(this.fireAuth);
     }
 
     private getCustomClaims(): Observable<{[key: string]: boolean}> {
