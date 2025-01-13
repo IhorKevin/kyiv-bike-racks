@@ -143,9 +143,21 @@
               "devServerTarget": "kyiv-bike-racks:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "kyiv-bike-racks"
+  "defaultProject": "kyiv-bike-racks",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

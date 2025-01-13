@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import {MatSnackBar} from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     constructor(
         private auth: AuthService,
@@ -16,9 +16,6 @@ export class LoginComponent implements OnInit {
         private ngZone: NgZone,
         private snackBar: MatSnackBar
     ) { }
-
-    ngOnInit() {
-    }
 
     login(): void {
         const onSuccess = () => this.ngZone.run(() => this.router.navigate(['/racks']));
