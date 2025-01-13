@@ -8,7 +8,7 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {AngularFireStorage, AngularFireUploadTask} from '@angular/fire/compat/storage';
 import {GoogleMap} from '@angular/google-maps';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
@@ -29,7 +29,7 @@ const longitudeMax = 180;
 })
 export class BikeRackFormComponent implements OnInit, OnDestroy {
 
-    form: FormGroup;
+    form: UntypedFormGroup;
     uploadPercent: Observable<number>;
     previewSrc: BehaviorSubject<string>;
     mapOptions: google.maps.MapOptions;
@@ -45,7 +45,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private firestorage: AngularFireStorage
     ) {
         this.save = new EventEmitter();
