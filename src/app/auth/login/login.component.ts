@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthService } from '../auth.service';

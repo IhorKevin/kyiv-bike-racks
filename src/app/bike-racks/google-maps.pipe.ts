@@ -8,7 +8,7 @@ export class GoogleMapsPipe implements PipeTransform {
 
     private readonly host: string = 'google.com/maps';
 
-    transform(value: firebase.firestore.GeoPoint, ...args: any[]): string {
+    transform(value: firebase.firestore.GeoPoint): string {
         if(!value) return '';
         const lat = value.latitude;
         const lng = value.longitude;
