@@ -154,7 +154,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         });
     }
 
-    clearRack(event?: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
+    clearRack(): void {
         this.router.navigate(['.'], {
             relativeTo: this.route,
             state: {
