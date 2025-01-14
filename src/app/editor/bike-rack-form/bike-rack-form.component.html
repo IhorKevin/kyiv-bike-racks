@@ -31,6 +31,7 @@
     </div>
     <div>
         <mat-form-field class="bike-rack-form__capacity">
+            <mat-label>Ємність</mat-label>
             <input matInput type="number" placeholder="Ємність" formControlName="capacity">
         </mat-form-field>
         <button mat-icon-button type="button" (click)="decrementCapacity()">
@@ -41,16 +42,19 @@
         </button>
     </div>
     <mat-form-field>
-        <input matInput type="text" placeholder="Заголовок" formControlName="title" autocomplete="off">
+        <mat-label>Заголовок</mat-label>
+        <input matInput type="text" placeholder="Стійки та інструменти" formControlName="title" autocomplete="off">
     </mat-form-field>
     <mat-form-field>
-        <input matInput type="text" placeholder="Адреса" formControlName="street_address" autocomplete="off">
-        <button mat-icon-button type="button" matSuffix title="Визначити" (click)="defineAddress()">
+        <mat-label>Адреса</mat-label>
+        <input matInput type="text" placeholder="просп. Лесі Українки, 4" formControlName="street_address" autocomplete="off">
+        <button mat-icon-button type="button" matIconSuffix title="Визначити" (click)="defineAddress()">
             <mat-icon>autorenew</mat-icon>
         </button>
     </mat-form-field>
     <mat-form-field>
-        <input matInput type="text" placeholder="Власник" formControlName="owner_name" autocomplete="off">
+        <mat-label>Власник</mat-label>
+        <input matInput type="text" placeholder="Молодий театр" formControlName="owner_name" autocomplete="off">
         <mat-hint>Кафе, банк, школа тощо</mat-hint>
     </mat-form-field>
     <mat-checkbox formControlName="is_sheffield" color="primary">П-подібна</mat-checkbox>

@@ -1,9 +1,9 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GoogleMap} from '@angular/google-maps';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
-import {MatLegacySelectionListChange as MatSelectionListChange} from '@angular/material/legacy-list';
-import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSelectionListChange} from '@angular/material/list';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {AngularFirestore, CollectionReference, Query, QueryFn} from '@angular/fire/compat/firestore';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';

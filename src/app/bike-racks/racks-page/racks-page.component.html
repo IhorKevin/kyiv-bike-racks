@@ -32,11 +32,11 @@
 </mat-menu>
 <ng-template #suggestLink>
     <a mat-menu-item href="https://forms.gle/b1YSbj9nJgBUmuss9" target="_bank">
-         Відсутня на карті? <mat-icon [inline]="true">open_in_new</mat-icon>
+         Відсутня на карті? <mat-icon>open_in_new</mat-icon>
     </a>
 </ng-template>
 
-<button class="mat-elevation-z2 location-button" mat-fab color="" type="button" (click)="centerMapToUserPosition()">
+<button class="mat-elevation-z2 location-button" mat-fab type="button" (click)="centerMapToUserPosition()">
     <mat-icon>my_location</mat-icon>
 </button>
 
@@ -57,7 +57,7 @@
             <mat-list-option [checkboxPosition]="'before'" [selected]="settings.allDesigns" value="allDesigns">Будь-якої конструкції</mat-list-option>
         </mat-selection-list>
     </mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
         <button mat-button [mat-dialog-close]="true">Закрити</button>
     </mat-dialog-actions>
 </ng-template>
@@ -66,7 +66,7 @@
     <mat-dialog-content>
         Видалити {{data.title || data.street_address || data.owner_name || data.id}}?
     </mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
         <button mat-button [mat-dialog-close]="true">Скасувати</button>
         <button mat-button color="warn" (click)="deleteRack(data.id)">Видалити</button>
     </mat-dialog-actions>

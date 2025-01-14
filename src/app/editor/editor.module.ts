@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {AngularFireStorageModule} from '@angular/fire/compat/storage';
-import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
-import {MatLegacyProgressBarModule as MatProgressBarModule} from '@angular/material/legacy-progress-bar';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { EditorRoutingModule } from './editor-routing.module';
 import { SharedModule } from '../shared/shared.module';

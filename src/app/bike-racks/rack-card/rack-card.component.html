@@ -1,4 +1,4 @@
-<mat-card class="rack-details">
+<mat-card appearance="outlined" class="rack-details">
     <img *ngIf="rack.photo" mat-card-image class="rack-details__img" [src]="rack.photo" alt="Фото стійок для велосипедів">
     <mat-card-content class="rack-details__body">
         <mat-card-title>
@@ -23,7 +23,7 @@
             </tr>
         </table>
     </mat-card-content>
-    <mat-card-actions *ngIf="canEdit" class="rack-details__actions">
+    <mat-card-actions *ngIf="canEdit" align="end">
         <button *ngIf="canDelete" mat-button type="button" color="warn" (click)="delete.emit()">Видалити</button>
         <a mat-button routerLink="/editor/edit/{{rack.id}}">Редагувати</a>
     </mat-card-actions>
