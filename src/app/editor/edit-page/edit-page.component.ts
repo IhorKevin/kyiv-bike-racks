@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {ActivatedRoute, Router} from '@angular/router';
 import firebase from 'firebase/compat/app';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
 import {BikeRack} from '../../bike-racks';
 
 @Component({
