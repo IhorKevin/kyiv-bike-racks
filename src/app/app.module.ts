@@ -6,7 +6,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
 import { provideAuth, getAuth } from "@angular/fire/auth";
-import { AngularFireAuthGuardModule } from '@angular/fire/compat/auth-guard';
+import { AuthGuardModule } from '@angular/fire/auth-guard';
 import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
@@ -35,7 +35,7 @@ const fireConfig: FirebaseOptions = {
         AppRoutingModule,
         AngularFireModule.initializeApp(fireConfig),
         AngularFireAuthModule,
-        AngularFireAuthGuardModule,
+        AuthGuardModule,
         AngularFireAnalyticsModule,
         provideFirebaseApp(() => initializeApp(fireConfig)),
         provideAuth(() => getAuth()),
