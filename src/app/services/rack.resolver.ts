@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { BikeRack } from '../bike-racks';
 @Injectable({
     providedIn: 'root'
 })
-export class RackResolver implements Resolve<BikeRack> {
+export class RackResolver  {
 
     constructor(private store: AngularFirestore) { }
 
