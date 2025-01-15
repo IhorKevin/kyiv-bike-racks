@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {RacksPageComponent} from './racks-page/racks-page.component';
-import { RackResolver } from "../services/rack.resolver";
+import { RacksPageComponent } from './racks-page/racks-page.component';
+import { rackResolver } from '../services/rack.resolver';
 
 
 const routes: Routes = [{
@@ -11,7 +11,7 @@ const routes: Routes = [{
         title: 'Карта'
     },
     resolve: {
-        rack: RackResolver
+        rack: rackResolver
     }
 }];
 
