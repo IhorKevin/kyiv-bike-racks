@@ -41,7 +41,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     @Input() rack: BikeRack;
     @Output() save: EventEmitter<BikeRack>;
-    @Output() cancel: EventEmitter<void>;
+    @Output() exitEditing: EventEmitter<void>;
     @ViewChild(GoogleMap) mapRef: GoogleMap;
 
     constructor(
@@ -49,7 +49,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
         private firestorage: AngularFireStorage
     ) {
         this.save = new EventEmitter();
-        this.cancel = new EventEmitter();
+        this.exitEditing = new EventEmitter();
         this.previewSrc = new BehaviorSubject<string>('');
         this.rackLocation = new Subject();
         this.destroy = new Subject();
@@ -111,7 +111,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     }
 
     onCancel(): void {
-        this.cancel.emit();
+        this.exitEditing.emit();
     }
 
     onFileChange(input: HTMLInputElement): void {
