@@ -16,6 +16,7 @@
       "node_modules/@types"
     ],
     "lib": [
+      "ES2022",
       "dom"
     ],
     "useDefineForClassFields": false

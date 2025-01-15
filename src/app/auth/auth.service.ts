@@ -11,6 +11,11 @@ import {
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+interface CustomClaims {
+    editor?: boolean;
+    admin?: boolean;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -43,13 +48,21 @@ export class AuthService {
         return signOut(this.fireAuth);
     }
 
-    private getCustomClaims(): Observable<{[key: string]: boolean}> {
+    private getCustomClaims(): Observable<CustomClaims> {
         return this.user
             .pipe(switchMap(user => {
                 return user ? user.getIdTokenResult() : of(null);
             }))
-            .pipe(map(result => {
-                return result ? result.claims : {};
+            .pipe(map(tokenResult => {
+                const result: CustomClaims = {};
+
+                if (tokenResult) {
+                    const { claims } = tokenResult;
+                    if ('editor' in claims) result.editor = Boolean(claims.editor);
+                    if ('admin' in claims) result.admin = Boolean(claims.admin);
+                }
+
+                return result;
             }));
     }
 
