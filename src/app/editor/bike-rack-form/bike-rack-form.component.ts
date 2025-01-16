@@ -9,10 +9,10 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
+import { Storage, ref, uploadBytesResumable, percentage, getDownloadURL } from '@angular/fire/storage';
 import { GoogleMap } from '@angular/google-maps';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil, map } from 'rxjs/operators';
 import { GeoPoint, Timestamp } from 'firebase/firestore';
 import { BikeRack } from '../../bike-racks';
 
@@ -34,7 +34,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
     previewSrc: BehaviorSubject<string>;
     mapOptions: google.maps.MapOptions;
     isDisabled: boolean;
-    private file: File;
+    file: File;
     private rackLocation: Subject<google.maps.LatLng>;
     private destroy: Subject<void>;
     private geocoder: google.maps.Geocoder;
@@ -46,7 +46,7 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private fb: UntypedFormBuilder,
-        private firestorage: AngularFireStorage
+        private storage: Storage
     ) {
         this.save = new EventEmitter();
         this.exitEditing = new EventEmitter();
@@ -193,20 +193,22 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    private uploadPhoto(file: File): Promise<string> {
+    private async uploadPhoto(file: File): Promise<string> {
         const name = `${this.form.value.latitude}_${this.form.value.longitude}`;
         const extension = file.name.split('.').pop() || '.jpg';
         const path: string = `/racks-photo/original/${name}.${extension}`;
-        const task: AngularFireUploadTask = this.firestorage.upload(path, file);
-        this.uploadPercent = task.percentageChanges();
-        return task
-            .then(snapshot => {
-                this.file = null;
-                return snapshot.ref.getDownloadURL();
-            })
-            .then(url => {
-                return url.replace('original', 'preview');
-            });
+
+        const fileRef = ref(this.storage, path);
+
+        const task = uploadBytesResumable(fileRef, file);
+        this.uploadPercent = percentage(task).pipe(map(({ progress }) => progress));
+
+        const snapshot = await task;
+
+        this.file = null;
+        const url = await getDownloadURL(snapshot.ref);
+
+        return url.replace('original', 'preview');
     }
 
 }

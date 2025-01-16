@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { StorageModule } from '@angular/fire/storage';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -22,7 +22,7 @@ import { EditPageComponent } from './edit-page/edit-page.component';
         MatProgressBarModule,
         EditorRoutingModule,
         ReactiveFormsModule,
-        AngularFireStorageModule
+        StorageModule
     ]
 })
 export class EditorModule { }
