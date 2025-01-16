@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,7 +30,6 @@ const materialComponents = [
         CommonModule,
         AngularFirestoreModule,
         AngularFireAuthModule,
-        AngularFireAnalyticsModule,
         GoogleMapsModule,
         ...materialComponents
     ]

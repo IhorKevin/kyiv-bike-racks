@@ -7,7 +7,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
 import { provideAuth, getAuth } from "@angular/fire/auth";
 import { AuthGuardModule } from '@angular/fire/auth-guard';
-import { AngularFireAnalyticsModule } from '@angular/fire/compat/analytics';
+import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -36,9 +36,9 @@ const fireConfig: FirebaseOptions = {
         AngularFireModule.initializeApp(fireConfig),
         AngularFireAuthModule,
         AuthGuardModule,
-        AngularFireAnalyticsModule,
         provideFirebaseApp(() => initializeApp(fireConfig)),
         provideAuth(() => getAuth()),
+        provideAnalytics(() => getAnalytics()),
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
         BikeRacksModule,
         AuthModule,
