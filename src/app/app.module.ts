@@ -3,9 +3,8 @@ import { NgModule } from '@angular/core';
 import type { FirebaseOptions } from '@angular/fire/app';
 import { AngularFireModule } from '@angular/fire/compat';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
-import { provideAuth, getAuth } from "@angular/fire/auth";
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AuthGuardModule } from '@angular/fire/auth-guard';
 import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +33,6 @@ const fireConfig: FirebaseOptions = {
         BrowserModule,
         AppRoutingModule,
         AngularFireModule.initializeApp(fireConfig),
-        AngularFireAuthModule,
         AuthGuardModule,
         provideFirebaseApp(() => initializeApp(fireConfig)),
         provideAuth(() => getAuth()),
