@@ -33,9 +33,6 @@ const fireConfig: FirebaseOptions = {
         BrowserModule,
         AppRoutingModule,
         AuthGuardModule,
-        provideFirebaseApp(() => initializeApp(fireConfig)),
-        provideAuth(() => getAuth()),
-        provideAnalytics(() => getAnalytics()),
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
         }),
@@ -43,7 +40,11 @@ const fireConfig: FirebaseOptions = {
         AuthModule,
         BrowserAnimationsModule,
     ],
-    providers: [],
+    providers: [
+        provideFirebaseApp(() => initializeApp(fireConfig)),
+        provideAuth(() => getAuth()),
+        provideAnalytics(() => getAnalytics()),
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

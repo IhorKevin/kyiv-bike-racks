@@ -19,7 +19,7 @@ const materialComponents = [
     MatSnackBarModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatListModule
+    MatListModule,
 ];
 
 @NgModule({
@@ -29,7 +29,7 @@ const materialComponents = [
         CommonModule,
         FirestoreModule,
         GoogleMapsModule,
-        ...materialComponents
-    ]
+        ...materialComponents,
+    ],
 })
-export class SharedModule { }
+export class SharedModule {}
