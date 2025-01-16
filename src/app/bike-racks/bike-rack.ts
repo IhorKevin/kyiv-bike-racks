@@ -1,9 +1,9 @@
-import firebase from 'firebase/compat/app';
+import type { GeoPoint, Timestamp } from 'firebase/firestore';
 
 export interface BikeRack {
     id?: string;
-    coords: firebase.firestore.GeoPoint;
-    readonly created_at: firebase.firestore.Timestamp;
+    coords: GeoPoint;
+    readonly created_at: Timestamp;
     capacity?: number;
     photo?: string;
     title?: string;

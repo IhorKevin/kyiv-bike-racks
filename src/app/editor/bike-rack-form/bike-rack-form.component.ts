@@ -9,12 +9,12 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import {AngularFireStorage, AngularFireUploadTask} from '@angular/fire/compat/storage';
-import {GoogleMap} from '@angular/google-maps';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {debounceTime, takeUntil} from 'rxjs/operators';
-import firebase from 'firebase/compat/app';
-import {BikeRack} from '../../bike-racks';
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
+import { GoogleMap } from '@angular/google-maps';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { GeoPoint, Timestamp } from 'firebase/firestore';
+import { BikeRack } from '../../bike-racks';
 
 const latitudeMin = -90;
 const latitudeMax = 90;
@@ -86,8 +86,8 @@ export class BikeRackFormComponent implements OnInit, OnDestroy {
             const formValue = this.form.value;
             this.form.disable();
             const payload: BikeRack = {
-                coords: new firebase.firestore.GeoPoint(formValue.latitude, formValue.longitude),
-                created_at: this.rack.created_at || firebase.firestore.Timestamp.now(),
+                coords: new GeoPoint(formValue.latitude, formValue.longitude),
+                created_at: this.rack.created_at || Timestamp.now(),
                 capacity: formValue.capacity,
                 title: formValue.title,
                 street_address: formValue.street_address,

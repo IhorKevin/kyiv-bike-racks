@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {ActivatedRoute, Router} from '@angular/router';
-import firebase from 'firebase/compat/app';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {BikeRack} from '../../bike-racks';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FirestoreError } from 'firebase/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BikeRack } from '../../bike-racks';
 
 @Component({
     selector: 'app-edit-page',
@@ -42,7 +42,7 @@ export class EditPageComponent implements OnInit {
                 this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
                 this.router.navigate(['/racks'], {queryParams: {center}});
             })
-            .catch((error: firebase.firestore.FirestoreError) => {
+            .catch((error: FirestoreError) => {
                 this.snackBar.open(error.message, 'OK', {duration: 3000});
             });
     }
