@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FirestoreModule } from '@angular/fire/firestore';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,7 +27,6 @@ const materialComponents = [
     imports: [],
     exports: [
         CommonModule,
-        AngularFirestoreModule,
         FirestoreModule,
         GoogleMapsModule,
         ...materialComponents

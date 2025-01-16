@@ -13,7 +13,7 @@ import { Storage, ref, uploadBytesResumable, percentage, getDownloadURL } from '
 import { GoogleMap } from '@angular/google-maps';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, takeUntil, map } from 'rxjs/operators';
-import { GeoPoint, Timestamp } from 'firebase/firestore';
+import { GeoPoint, Timestamp } from '@angular/fire/firestore';
 import { BikeRack } from '../../bike-racks';
 
 const latitudeMin = -90;

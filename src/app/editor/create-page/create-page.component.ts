@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GeoPoint, type FirestoreError } from 'firebase/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, collection, addDoc, FirestoreError, GeoPoint } from '@angular/fire/firestore';
 import { BikeRack } from '../../bike-racks';
 import { GeoService } from '../../services';
 
@@ -19,7 +18,7 @@ export class CreatePageComponent implements OnInit {
         private geoService: GeoService,
         private snackBar: MatSnackBar,
         private router: Router,
-        private store: AngularFirestore
+        private db: Firestore,
     ) { }
 
     ngOnInit() {
@@ -46,14 +45,15 @@ export class CreatePageComponent implements OnInit {
 
     save(rack: BikeRack): void {
         const center: string = [rack.coords.latitude, rack.coords.longitude].join(',');
-        this.store.collection<BikeRack>('/racks')
-            .add(rack)
+
+        const collectionRef = collection(this.db, 'racks');
+        addDoc(collectionRef, rack)
             .then(() => {
-                this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks'], {queryParams: {center}});
+                this.snackBar.open('Велопарковку збережено', 'OK', { duration: 3000 });
+                this.router.navigate(['/racks'], { queryParams: { center } });
             })
             .catch((error: FirestoreError) => {
-                this.snackBar.open(error.message, 'OK', {duration: 3000});
+                this.snackBar.open(error.message, 'OK', { duration: 3000 });
             });
     }
 

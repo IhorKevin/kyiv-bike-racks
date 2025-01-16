@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import type { GeoPoint } from 'firebase/firestore';
+import type { GeoPoint } from '@angular/fire/firestore';
 
 @Pipe({
     name: 'googleMaps'

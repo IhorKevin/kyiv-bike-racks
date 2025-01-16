@@ -1,4 +1,4 @@
-import type { GeoPoint, Timestamp } from 'firebase/firestore';
+import type { GeoPoint, Timestamp } from '@angular/fire/firestore';
 
 export interface BikeRack {
     id?: string;
