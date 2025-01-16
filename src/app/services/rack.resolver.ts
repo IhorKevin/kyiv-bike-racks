@@ -12,8 +12,9 @@ export const rackResolver: ResolveFn<BikeRack> = (route) => {
 
     const docRef = doc(firestore, 'racks', id);
 
-    return docSnapshots(docRef)
-        .pipe(map((snapshot) => {
-            return snapshot.exists() ? snapshot.data() as BikeRack : null;
-        }));
+    return docSnapshots(docRef).pipe(
+        map((snapshot) => {
+            return snapshot.exists() ? (snapshot.data() as BikeRack) : null;
+        }),
+    );
 };

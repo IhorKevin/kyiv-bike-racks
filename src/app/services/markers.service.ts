@@ -5,10 +5,9 @@ export interface MarkerOptionsSet {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class MarkersService {
-
     readonly folder: string = '/assets/map-markers/';
     readonly rackMarkersFolder: string = '/assets/rack-markers/';
 
@@ -18,19 +17,22 @@ export class MarkersService {
         return this.folder + 'user-location.svg';
     }
 
-    getRackMarker(type: 'primary' | 'secondary', size: 'lg' | 'sm', state: 'default' | 'active'): google.maps.MarkerOptions {
-
+    getRackMarker(
+        type: 'primary' | 'secondary',
+        size: 'lg' | 'sm',
+        state: 'default' | 'active',
+    ): google.maps.MarkerOptions {
         let zIndex: number = 1;
-        if(type == 'primary') zIndex = 2;
+        if (type == 'primary') zIndex = 2;
         const isActive = state == 'active';
-        if(isActive) zIndex = 3;
+        if (isActive) zIndex = 3;
 
         return {
             icon: `${this.rackMarkersFolder}${type}-${size}-${state}.svg`,
             visible: true,
             optimized: true,
             zIndex: zIndex,
-            clickable: !isActive
+            clickable: !isActive,
         };
     }
 
@@ -40,9 +42,8 @@ export class MarkersService {
                 icon: this.getUserLocationIcon(),
                 visible: true,
                 clickable: false,
-                optimized: false
-            }
-        }
+                optimized: false,
+            },
+        };
     }
-
 }
