@@ -9,34 +9,63 @@
 >
     <map-marker
         *ngIf="selectedRack | async as rack"
-        [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
-        [options]="configMarker(rack,true)"
+        [position]="{ lat: rack.coords.latitude, lng: rack.coords.longitude }"
+        [options]="configMarker(rack, true)"
     ></map-marker>
     <map-marker
         *ngFor="let rack of racks | async; trackBy: trackByRackId"
-        [position]="{lat: rack.coords.latitude, lng: rack.coords.longitude}"
+        [position]="{ lat: rack.coords.latitude, lng: rack.coords.longitude }"
         [options]="configMarker(rack)"
         (mapClick)="onRackSelect(rack)"
     ></map-marker>
-    <map-marker *ngIf="userPosition" [position]="{lat: userPosition.coords.latitude, lng: userPosition.coords.longitude}" [options]="markerOptions.userLocation"></map-marker>
-
+    <map-marker
+        *ngIf="userPosition"
+        [position]="{
+            lat: userPosition.coords.latitude,
+            lng: userPosition.coords.longitude,
+        }"
+        [options]="markerOptions.userLocation"
+    ></map-marker>
 </google-map>
 
 <button class="menu-button" mat-raised-button [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
-    <a mat-menu-item *ngIf="isEditor | async; else suggestLink" routerLink="/editor/create">Додати велопарковку</a>
-    <button mat-menu-item type="button" (click)="openSettings(settingsDialogContent)">Налаштування</button>
-    <button mat-menu-item *ngIf="isLoggedIn | async" type="button" (click)="logout()">Вийти</button>
+    <a
+        mat-menu-item
+        *ngIf="isEditor | async; else suggestLink"
+        routerLink="/editor/create"
+        >Додати велопарковку</a
+    >
+    <button
+        mat-menu-item
+        type="button"
+        (click)="openSettings(settingsDialogContent)"
+    >
+        Налаштування
+    </button>
+    <button
+        mat-menu-item
+        *ngIf="isLoggedIn | async"
+        type="button"
+        (click)="logout()"
+    >
+        Вийти
+    </button>
 </mat-menu>
 <ng-template #suggestLink>
     <a mat-menu-item href="https://forms.gle/b1YSbj9nJgBUmuss9" target="_bank">
-         Відсутня на карті? <mat-icon>open_in_new</mat-icon>
+        Відсутня на карті? <mat-icon>open_in_new</mat-icon>
     </a>
 </ng-template>
 
-<button class="mat-elevation-z2 location-button" mat-fab type="button" (click)="centerMapToUserPosition()">
+<button
+    class="mat-elevation-z2 location-button"
+    mat-fab
+    type="button"
+    (click)="centerMapToUserPosition()"
+>
     <mat-icon>my_location</mat-icon>
 </button>
 
@@ -52,9 +81,24 @@
     <h2 mat-dialog-title>Показувати</h2>
     <mat-dialog-content>
         <mat-selection-list (selectionChange)="onSettingsChange($event)">
-            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.private" value="private">Службові</mat-list-option>
-            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.small" value="small">Малі</mat-list-option>
-            <mat-list-option [checkboxPosition]="'before'" [selected]="settings.allDesigns" value="allDesigns">Будь-якої конструкції</mat-list-option>
+            <mat-list-option
+                togglePosition="before"
+                [selected]="settings.private"
+                value="private"
+                >Службові</mat-list-option
+            >
+            <mat-list-option
+                togglePosition="before"
+                [selected]="settings.small"
+                value="small"
+                >Малі</mat-list-option
+            >
+            <mat-list-option
+                togglePosition="before"
+                [selected]="settings.allDesigns"
+                value="allDesigns"
+                >Будь-якої конструкції</mat-list-option
+            >
         </mat-selection-list>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
@@ -64,10 +108,13 @@
 
 <ng-template #confirmationDialogContent let-data>
     <mat-dialog-content>
-        Видалити {{data.title || data.street_address || data.owner_name || data.id}}?
+        Видалити
+        {{ data.title || data.street_address || data.owner_name || data.id }}?
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button mat-button [mat-dialog-close]="true">Скасувати</button>
-        <button mat-button color="warn" (click)="deleteRack(data.id)">Видалити</button>
+        <button mat-button color="warn" (click)="deleteRack(data.id)">
+            Видалити
+        </button>
     </mat-dialog-actions>
 </ng-template>

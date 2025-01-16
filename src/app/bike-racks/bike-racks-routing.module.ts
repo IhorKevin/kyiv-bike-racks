@@ -3,20 +3,21 @@ import { Routes, RouterModule } from '@angular/router';
 import { RacksPageComponent } from './racks-page/racks-page.component';
 import { rackResolver } from '../services/rack.resolver';
 
-
-const routes: Routes = [{
-    path: 'racks',
-    component: RacksPageComponent,
-    data: {
-        title: 'Карта'
+const routes: Routes = [
+    {
+        path: 'racks',
+        component: RacksPageComponent,
+        data: {
+            title: 'Карта',
+        },
+        resolve: {
+            rack: rackResolver,
+        },
     },
-    resolve: {
-        rack: rackResolver
-    }
-}];
+];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class BikeRacksRoutingModule { }
+export class BikeRacksRoutingModule {}
