@@ -1,16 +1,16 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {GoogleMap} from '@angular/google-maps';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSelectionListChange} from '@angular/material/list';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {AngularFirestore, CollectionReference, Query, QueryFn} from '@angular/fire/compat/firestore';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
-import {BikeRack} from '../bike-rack';
-import {AuthService} from '../../auth/auth.service';
-import {GeoService, MarkerOptionsSet, MarkersService} from '../../services';
-import {FilterSettings} from '../settings';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { GoogleMap } from '@angular/google-maps';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectionListChange } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Firestore, doc, deleteDoc, collection, query, where, QueryConstraint, collectionData, docSnapshots } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
+import { BikeRack } from '../bike-rack';
+import { AuthService } from '../../auth/auth.service';
+import { GeoService, MarkerOptionsSet, MarkersService } from '../../services';
+import { FilterSettings } from '../settings';
 
 const settingsKey: string = 'racks_settings';
 
@@ -45,7 +45,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
     constructor(
         private auth: AuthService,
-        private store: AngularFirestore,
+        private db: Firestore,
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute,
@@ -60,7 +60,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             maxZoom: this.maxZoom,
             streetViewControl: false,
             fullscreenControl: false,
-            panControl: false,
             mapTypeControl: false,
             zoomControl: false,
             rotateControl: true,
@@ -68,20 +67,21 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         };
         this.initSettings();
 
+        const itemsRef = collection(this.db, 'racks').withConverter<BikeRack>({
+            fromFirestore: (snapshot) => snapshot.data() as BikeRack,
+            toFirestore: (item: any) => item,
+        });
+
         this.racks = this.settingsChange
             .pipe(debounceTime(500))
-            .pipe(switchMap(settings => {
-                const queryFn: QueryFn = ref => {
-                    let query: Query | CollectionReference = ref;
-                    if(!settings.private) query = query.where('is_private', '==', false);
-                    if(!settings.small) query = query.where('capacity', '>=', 6);
-                    if(!settings.allDesigns) query = query.where('is_sheffield', '==', true);
-                    return query;
-                };
-                return this.store
-                    .collection<BikeRack>('/racks', queryFn)
-                    .valueChanges({idField: 'id'})
-                    .pipe(shareReplay(1));
+            .pipe(switchMap((settings) => {
+                const constraints: QueryConstraint[] = [];
+                if(!settings.private) constraints.push(where('is_private', '==', false));
+                if(!settings.small) constraints.push(where('capacity', '>=', 6));
+                if(!settings.allDesigns) constraints.push(where('is_sheffield', '==', true));
+
+                const bikeRacksQuery = query(itemsRef, ...constraints);
+                return collectionData(bikeRacksQuery, { idField: 'id' }).pipe(shareReplay(1));
             }));
 
         this.markerOptions = this.markersService.options();
@@ -105,15 +105,18 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
 
         this.selectedRack = this.route.queryParamMap
-            .pipe(map(paramMap => paramMap.get('rack_id')))
-            .pipe(switchMap(id => this.store.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
-            .pipe(map(snapshot => {
-                const payload = snapshot.payload;
-                if(payload.exists)  {
-                    this.panToRackWithOffset(payload.data());
+            .pipe(map((paramMap) => paramMap.get('rack_id')))
+            .pipe(switchMap((id) => {
+                const docRef = doc(this.db, `racks/${id}`);
+                return docSnapshots(docRef);
+            }))
+            .pipe(map((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data() as BikeRack;
+                    this.panToRackWithOffset(data);
                     return {
-                        id: payload.id,
-                        ...payload.data()
+                        id: snapshot.id,
+                        ...data
                     };
                 }
                 else {
@@ -197,10 +200,8 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     }
 
     deleteRack(id: string): void {
-        this.store
-            .collection('racks/')
-            .doc(id)
-            .delete()
+        const docRef = doc(this.db, 'racks', id);
+        deleteDoc(docRef)
             .then(() => {
                 this.dialog.closeAll();
                 this.clearRack();
