@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { FirestoreModule } from '@angular/fire/firestore';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,6 +29,7 @@ const materialComponents = [
     exports: [
         CommonModule,
         AngularFirestoreModule,
+        FirestoreModule,
         GoogleMapsModule,
         ...materialComponents
     ]
