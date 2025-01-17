@@ -14,7 +14,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BikeRacksModule } from './bike-racks/bike-racks.module';
-import { AuthModule } from './auth/auth.module';
 
 const fireConfig: FirebaseOptions = {
     apiKey: 'AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI',
@@ -37,7 +36,6 @@ const fireConfig: FirebaseOptions = {
             enabled: environment.production,
         }),
         BikeRacksModule,
-        AuthModule,
         BrowserAnimationsModule,
     ],
     providers: [

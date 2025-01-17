@@ -1,32 +1,29 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['./login.component.scss'],
+    standalone: true,
+    imports: [MatButtonModule],
 })
 export class LoginComponent {
-
-    constructor(
-        private auth: AuthService,
-        private router: Router,
-        private ngZone: NgZone,
-        private snackBar: MatSnackBar
-    ) { }
+    private readonly router = inject(Router);
+    private readonly auth = inject(AuthService);
+    private readonly ngZone = inject(NgZone);
+    private readonly snackBar = inject(MatSnackBar);
 
     login(): void {
-        const onSuccess = () => this.ngZone.run(() => this.router.navigate(['/racks']));
+        const onSuccess = () =>
+            this.ngZone.run(() => this.router.navigate(['/racks']));
         const onError = (error) => {
             console.log('LOGIN ERROR', error);
-            this.snackBar.open(error, 'OK', {duration: 3000});
+            this.snackBar.open(error, 'OK', { duration: 3000 });
         };
-        this.auth
-            .login()
-            .then(onSuccess)
-            .catch(onError);
+        this.auth.login().then(onSuccess).catch(onError);
     }
-
 }
