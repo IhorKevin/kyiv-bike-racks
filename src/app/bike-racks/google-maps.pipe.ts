@@ -3,6 +3,7 @@ import type { GeoPoint } from '@angular/fire/firestore';
 
 @Pipe({
     name: 'googleMaps',
+    standalone: true,
 })
 export class GoogleMapsPipe implements PipeTransform {
     private readonly host: string = 'google.com/maps';

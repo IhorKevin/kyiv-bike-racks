@@ -2,7 +2,7 @@ import { Component, inject, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services';
 
 @Component({
     selector: 'app-login',

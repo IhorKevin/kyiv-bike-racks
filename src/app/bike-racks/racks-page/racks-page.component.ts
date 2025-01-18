@@ -26,8 +26,12 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
 import { BikeRack } from '../bike-rack';
-import { AuthService } from '../../auth/auth.service';
-import { GeoService, MarkerOptionsSet, MarkersService } from '../../services';
+import {
+    GeoService,
+    MarkerOptionsSet,
+    MarkersService,
+    AuthService,
+} from '../../services';
 import { FilterSettings } from '../settings';
 
 const settingsKey: string = 'racks_settings';

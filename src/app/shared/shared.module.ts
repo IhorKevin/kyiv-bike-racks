@@ -4,7 +4,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,7 +13,6 @@ const materialComponents = [
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    MatCardModule,
     MatSnackBarModule,
     MatCheckboxModule,
     MatDialogModule,
