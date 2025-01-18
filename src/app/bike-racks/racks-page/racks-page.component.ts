@@ -7,11 +7,12 @@ import {
     TemplateRef,
     ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GoogleMap } from '@angular/google-maps';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSelectionListChange } from '@angular/material/list';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import {
     Firestore,
     doc,
@@ -33,6 +34,8 @@ import {
     AuthService,
 } from '../../services';
 import { FilterSettings } from '../settings';
+import { RackCardComponent } from '../rack-card/rack-card.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const settingsKey: string = 'racks_settings';
 
@@ -41,6 +44,15 @@ const settingsKey: string = 'racks_settings';
     templateUrl: './racks-page.component.html',
     styleUrls: ['./racks-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatDialogModule,
+        MatMenuModule,
+        MatListModule,
+        RackCardComponent,
+        SharedModule,
+        RouterLink,
+    ],
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {
     userPosition: GeolocationPosition;

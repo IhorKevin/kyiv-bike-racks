@@ -14,7 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { BikeRacksModule } from './bike-racks/bike-racks.module';
+import { RacksPageComponent } from './bike-racks/racks-page/racks-page.component';
 
 const fireConfig: FirebaseOptions = {
     apiKey: 'AIzaSyDmx2Z2k5nrML8tqjhmH1-hXLH0htKuBsI',
@@ -36,7 +36,7 @@ const fireConfig: FirebaseOptions = {
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: environment.production,
         }),
-        BikeRacksModule,
+        RacksPageComponent,
         BrowserAnimationsModule,
     ],
     providers: [
