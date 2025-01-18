@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AuthGuardModule } from '@angular/fire/auth-guard';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
@@ -41,6 +42,7 @@ const fireConfig: FirebaseOptions = {
     providers: [
         provideFirebaseApp(() => initializeApp(fireConfig)),
         provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
         provideAnalytics(() => getAnalytics()),
     ],
     bootstrap: [AppComponent],

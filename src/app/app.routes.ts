@@ -12,7 +12,7 @@ export const routes: Routes = [
     {
         path: 'editor',
         loadChildren: () =>
-            import('./editor/editor.module').then((m) => m.EditorModule),
+            import('./editor/editor.routes').then((m) => m.routes),
         canActivate: [AuthGuard],
         data: {
             authGuardPipe: redirectUnauthorizedToLogin,
