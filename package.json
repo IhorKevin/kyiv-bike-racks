@@ -14,7 +14,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "serve-pwa": "http-server -p 8080 -c-1 dist/kyiv-bike-racks --cors",
+    "serve-pwa": "http-server -p 8080 -c-1 dist/kyiv-bike-racks/browser --cors",
     "build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint"
