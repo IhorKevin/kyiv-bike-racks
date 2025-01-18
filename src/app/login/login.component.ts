@@ -8,7 +8,6 @@ import { AuthService } from '../services';
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: true,
     imports: [MatButtonModule],
 })
 export class LoginComponent {

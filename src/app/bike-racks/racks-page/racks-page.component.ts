@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     OnInit,
     TemplateRef,
     ViewChild,
@@ -44,7 +45,6 @@ const settingsKey: string = 'racks_settings';
     templateUrl: './racks-page.component.html',
     styleUrls: ['./racks-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         MatDialogModule,
         MatMenuModule,
@@ -75,10 +75,10 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     private readonly maxZoom = 19;
     private readonly locationZoom = 18;
     private settingsChange: BehaviorSubject<FilterSettings>;
+    private db = inject(Firestore);
 
     constructor(
         private auth: AuthService,
-        private db: Firestore,
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute,

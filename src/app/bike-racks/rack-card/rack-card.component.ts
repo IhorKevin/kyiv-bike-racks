@@ -16,8 +16,7 @@ import { GoogleMapsPipe } from '../google-maps.pipe';
     templateUrl: './rack-card.component.html',
     styleUrls: ['./rack-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatCardModule, SharedModule, GoogleMapsPipe, RouterLink],
+    imports: [MatCardModule, SharedModule, GoogleMapsPipe, RouterLink]
 })
 export class RackCardComponent {
     @Input() rack: BikeRack;

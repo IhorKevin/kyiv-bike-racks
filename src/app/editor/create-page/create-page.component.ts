@@ -17,8 +17,7 @@ import { BikeRackFormComponent } from '../bike-rack-form/bike-rack-form.componen
     selector: 'app-create-page',
     templateUrl: './create-page.component.html',
     styleUrls: ['./create-page.component.scss'],
-    imports: [BikeRackFormComponent, NgIf],
-    standalone: true,
+    imports: [BikeRackFormComponent, NgIf]
 })
 export class CreatePageComponent implements OnInit {
     initialRack: BikeRack;

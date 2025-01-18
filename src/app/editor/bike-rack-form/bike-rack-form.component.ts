@@ -45,7 +45,6 @@ const longitudeMax = 180;
     templateUrl: './bike-rack-form.component.html',
     styleUrls: ['./bike-rack-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         SharedModule,
         ReactiveFormsModule,
@@ -53,7 +52,7 @@ const longitudeMax = 180;
         MatInputModule,
         MatProgressBarModule,
         StorageModule,
-    ],
+    ]
 })
 export class BikeRackFormComponent implements OnInit, OnDestroy {
     form: UntypedFormGroup;

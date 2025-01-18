@@ -16,8 +16,7 @@ import { BikeRackFormComponent } from '../bike-rack-form/bike-rack-form.componen
     selector: 'app-edit-page',
     templateUrl: './edit-page.component.html',
     styleUrls: ['./edit-page.component.scss'],
-    standalone: true,
-    imports: [BikeRackFormComponent, NgIf],
+    imports: [BikeRackFormComponent, NgIf]
 })
 export class EditPageComponent implements OnInit {
     rack: BikeRack;
