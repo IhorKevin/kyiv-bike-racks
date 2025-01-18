@@ -16,6 +16,7 @@ import {
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
     Storage,
     ref,
@@ -29,10 +30,12 @@ import { GoogleMap } from '@angular/google-maps';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { SharedModule } from '../../shared/shared.module';
 import { BikeRack } from '../../bike-racks';
 
 const latitudeMin = -90;
@@ -46,13 +49,18 @@ const longitudeMax = 180;
     styleUrls: ['./bike-rack-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        SharedModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatProgressBarModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+        GoogleMap,
         StorageModule,
-    ]
+        NgIf,
+        AsyncPipe,
+    ],
 })
 export class BikeRackFormComponent implements OnInit, OnDestroy {
     form: UntypedFormGroup;

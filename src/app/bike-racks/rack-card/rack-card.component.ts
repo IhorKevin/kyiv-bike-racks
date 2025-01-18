@@ -5,10 +5,12 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
+import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { BikeRack } from '../bike-rack';
-import { SharedModule } from '../../shared/shared.module';
 import { GoogleMapsPipe } from '../google-maps.pipe';
 
 @Component({
@@ -16,7 +18,14 @@ import { GoogleMapsPipe } from '../google-maps.pipe';
     templateUrl: './rack-card.component.html',
     styleUrls: ['./rack-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatCardModule, SharedModule, GoogleMapsPipe, RouterLink]
+    imports: [
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        GoogleMapsPipe,
+        RouterLink,
+        NgIf,
+    ],
 })
 export class RackCardComponent {
     @Input() rack: BikeRack;

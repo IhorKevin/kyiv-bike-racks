@@ -14,9 +14,13 @@
     <div class="bike-rack-form__photo" (click)="fileInput.click()">
         <ng-container *ngIf="previewSrc | async as src; else dropZone">
             <div class="bike-rack-form__thumbnail">
-                <img  class="bike-rack-form__img" [src]="src" alt="">
+                <img class="bike-rack-form__img" [src]="src" alt="" />
                 <div class="bike-rack-form__overlay">
-                    <button mat-button type="button" class="bike-rack-form__change">
+                    <button
+                        mat-button
+                        type="button"
+                        class="bike-rack-form__change"
+                    >
                         <mat-icon>add_a_photo</mat-icon>
                     </button>
                 </div>
@@ -27,12 +31,23 @@
                 <mat-icon>add_a_photo</mat-icon>
             </div>
         </ng-template>
-        <input type="file" hidden #fileInput (change)="onFileChange(fileInput)" accept="image/jpeg">
+        <input
+            type="file"
+            hidden
+            #fileInput
+            (change)="onFileChange(fileInput)"
+            accept="image/jpeg"
+        />
     </div>
     <div>
         <mat-form-field class="bike-rack-form__capacity">
             <mat-label>Ємність</mat-label>
-            <input matInput type="number" placeholder="Ємність" formControlName="capacity">
+            <input
+                matInput
+                type="number"
+                placeholder="Ємність"
+                formControlName="capacity"
+            />
         </mat-form-field>
         <button mat-icon-button type="button" (click)="decrementCapacity()">
             <mat-icon>remove</mat-icon>
@@ -43,25 +58,72 @@
     </div>
     <mat-form-field>
         <mat-label>Заголовок</mat-label>
-        <input matInput type="text" placeholder="Стійки та інструменти" formControlName="title" autocomplete="off">
+        <input
+            matInput
+            type="text"
+            placeholder="Стійки та інструменти"
+            formControlName="title"
+            autocomplete="off"
+        />
     </mat-form-field>
     <mat-form-field>
         <mat-label>Адреса</mat-label>
-        <input matInput type="text" placeholder="просп. Лесі Українки, 4" formControlName="street_address" autocomplete="off">
-        <button mat-icon-button type="button" matIconSuffix title="Визначити" (click)="defineAddress()">
+        <input
+            matInput
+            type="text"
+            placeholder="просп. Лесі Українки, 4"
+            formControlName="street_address"
+            autocomplete="off"
+        />
+        <button
+            mat-icon-button
+            type="button"
+            matIconSuffix
+            title="Визначити"
+            (click)="defineAddress()"
+        >
             <mat-icon>autorenew</mat-icon>
         </button>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Власник</mat-label>
-        <input matInput type="text" placeholder="Молодий театр" formControlName="owner_name" autocomplete="off">
+        <input
+            matInput
+            type="text"
+            placeholder="Молодий театр"
+            formControlName="owner_name"
+            autocomplete="off"
+        />
         <mat-hint>Кафе, банк, школа тощо</mat-hint>
     </mat-form-field>
-    <mat-checkbox formControlName="is_sheffield" color="primary">П-подібна</mat-checkbox>
-    <mat-checkbox formControlName="is_private" color="primary">Службова</mat-checkbox>
+    <mat-checkbox formControlName="is_sheffield" color="primary"
+        >П-подібна</mat-checkbox
+    >
+    <mat-checkbox formControlName="is_private" color="primary"
+        >Службова</mat-checkbox
+    >
     <div class="bike-rack-form__actions">
-        <button mat-button type="button" (click)="onCancel()" [disabled]="isDisabled">Скасувати</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="isDisabled">Зберегти</button>
+        <button
+            mat-button
+            type="button"
+            (click)="onCancel()"
+            [disabled]="isDisabled"
+        >
+            Скасувати
+        </button>
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isDisabled"
+        >
+            Зберегти
+        </button>
     </div>
 </form>
-<mat-progress-bar class="upload-progress" *ngIf="uploadPercent | async as percent" mode="determinate" [value]="percent"></mat-progress-bar>
+<mat-progress-bar
+    class="upload-progress"
+    *ngIf="uploadPercent | async as percent"
+    mode="determinate"
+    [value]="percent"
+></mat-progress-bar>

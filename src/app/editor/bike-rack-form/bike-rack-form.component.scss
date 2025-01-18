@@ -21,7 +21,7 @@
     position: relative;
     overflow: hidden;
     text-align: center;
-    border-radius: .5em;
+    border-radius: 0.5em;
 }
 .bike-rack-form__img {
     vertical-align: top;
@@ -44,7 +44,7 @@
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-    border-radius: .5em;
+    border-radius: 0.5em;
     background-color: rgba(#000000, 6%);
 }
 .bike-rack-form__change {
@@ -87,5 +87,5 @@
     right: 0;
 }
 .mat-mdc-checkbox {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }

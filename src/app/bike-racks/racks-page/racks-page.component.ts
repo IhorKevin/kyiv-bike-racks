@@ -9,11 +9,14 @@ import {
     ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { GoogleMap } from '@angular/google-maps';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButton, MatFabButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import {
     Firestore,
     doc,
@@ -36,7 +39,6 @@ import {
 } from '../../services';
 import { FilterSettings } from '../settings';
 import { RackCardComponent } from '../rack-card/rack-card.component';
-import { SharedModule } from '../../shared/shared.module';
 
 const settingsKey: string = 'racks_settings';
 
@@ -49,9 +51,16 @@ const settingsKey: string = 'racks_settings';
         MatDialogModule,
         MatMenuModule,
         MatListModule,
+        MatIconModule,
+        MatButton,
         RackCardComponent,
-        SharedModule,
+        GoogleMap,
+        MapMarker,
         RouterLink,
+        MatFabButton,
+        NgIf,
+        AsyncPipe,
+        NgForOf,
     ],
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {
@@ -76,6 +85,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     private readonly locationZoom = 18;
     private settingsChange: BehaviorSubject<FilterSettings>;
     private db = inject(Firestore);
+    private snackBar = inject(MatSnackBar);
 
     constructor(
         private auth: AuthService,
@@ -84,7 +94,6 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private markersService: MarkersService,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar,
         private cdr: ChangeDetectorRef,
     ) {
         this.mapOptions = {
