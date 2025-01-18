@@ -1,6 +1,11 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+    ActivatedRoute,
+    NavigationEnd,
+    Router,
+    RouterOutlet,
+} from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { BikeRack } from './bike-racks';
 
@@ -8,7 +13,7 @@ import { BikeRack } from './bike-racks';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
     title: string = 'Велопарковки Києва';
