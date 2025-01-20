@@ -45,7 +45,7 @@
     box-sizing: border-box;
     text-align: center;
     border-radius: 0.5em;
-    background-color: rgba(#000000, 6%);
+    background-color: var(--mat-sys-surface);
 }
 .bike-rack-form__change {
     color: #ffffff;

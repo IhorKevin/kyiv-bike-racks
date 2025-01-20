@@ -29,7 +29,7 @@
 </google-map>
 
 <button class="menu-button" mat-raised-button [matMenuTriggerFor]="menu">
-    <mat-icon>menu</mat-icon>
+    <mat-icon>menu</mat-icon> Меню
 </button>
 <mat-menu #menu="matMenu">
     <a
@@ -62,7 +62,7 @@
 
 <button
     class="mat-elevation-z2 location-button"
-    mat-fab
+    mat-mini-fab
     type="button"
     (click)="centerMapToUserPosition()"
 >
@@ -107,14 +107,12 @@
 </ng-template>
 
 <ng-template #confirmationDialogContent let-data>
-    <mat-dialog-content>
+    <h2 mat-dialog-title>
         Видалити
         {{ data.title || data.street_address || data.owner_name || data.id }}?
-    </mat-dialog-content>
+    </h2>
     <mat-dialog-actions align="end">
         <button mat-button [mat-dialog-close]="true">Скасувати</button>
-        <button mat-button color="warn" (click)="deleteRack(data.id)">
-            Видалити
-        </button>
+        <button mat-button (click)="deleteRack(data.id)">Видалити</button>
     </mat-dialog-actions>
 </ng-template>

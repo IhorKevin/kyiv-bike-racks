@@ -11,11 +11,17 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { GoogleMap, MapMarker } from '@angular/google-maps';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+    MatDialog,
+    MatDialogClose,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+} from '@angular/material/dialog';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatButton, MatFabButton } from '@angular/material/button';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
     Firestore,
@@ -48,7 +54,10 @@ const settingsKey: string = 'racks_settings';
     styleUrls: ['./racks-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        MatDialogModule,
+        MatDialogClose,
+        MatDialogActions,
+        MatDialogContent,
+        MatDialogTitle,
         MatMenuModule,
         MatListModule,
         MatIconModule,
@@ -57,7 +66,7 @@ const settingsKey: string = 'racks_settings';
         GoogleMap,
         MapMarker,
         RouterLink,
-        MatFabButton,
+        MatMiniFabButton,
         NgIf,
         AsyncPipe,
         NgForOf,

@@ -15,7 +15,6 @@
         </mat-card-title>
         <a
             mat-fab
-            color="primary"
             class="mat-elevation-z1 rack-details__route-button"
             [href]="rack.coords | googleMaps"
             target="_blank"
@@ -42,7 +41,6 @@
             *ngIf="canDelete"
             mat-button
             type="button"
-            color="warn"
             (click)="delete.emit()"
         >
             Видалити
