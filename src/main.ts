@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { provideRouter, TitleStrategy } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -38,7 +38,7 @@ bootstrapApplication(AppComponent, {
         provideServiceWorker('ngsw-worker.js', {
             enabled: environment.production,
         }),
-        provideAnimations(),
+        provideAnimationsAsync(),
         provideFirebaseApp(() => initializeApp(fireConfig)),
         provideAuth(() => getAuth()),
         importProvidersFrom(AuthGuardModule),
