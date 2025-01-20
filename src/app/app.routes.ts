@@ -29,9 +29,7 @@ export const routes: Routes = [
     {
         path: 'racks',
         component: RacksPageComponent,
-        data: {
-            title: 'Карта',
-        },
+        title: 'Карта',
         resolve: {
             rack: rackResolver,
         },

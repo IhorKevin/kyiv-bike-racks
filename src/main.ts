@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, TitleStrategy } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import {
     FirebaseOptions,
@@ -15,6 +15,7 @@ import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
+import { TitleStrategyService } from './app/services';
 
 if (environment.production) {
     enableProdMode();
@@ -43,5 +44,9 @@ bootstrapApplication(AppComponent, {
         importProvidersFrom(AuthGuardModule),
         provideFirestore(() => getFirestore()),
         provideAnalytics(() => getAnalytics()),
+        {
+            provide: TitleStrategy,
+            useClass: TitleStrategyService,
+        },
     ],
 }).catch((err) => console.error(err));

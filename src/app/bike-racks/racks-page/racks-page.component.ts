@@ -29,7 +29,7 @@ import {
     docSnapshots,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { BikeRack } from '../bike-rack';
 import {
     GeoService,
@@ -150,26 +150,34 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.selectedRack = this.route.queryParamMap
+        const selectedRackDoc = this.route.queryParamMap
             .pipe(map((paramMap) => paramMap.get('rack_id')))
             .pipe(
                 switchMap((id) => {
                     const docRef = doc(this.db, `racks/${id}`);
                     return docSnapshots(docRef);
                 }),
-            )
+            );
+
+        this.selectedRack = selectedRackDoc
             .pipe(
                 map((snapshot) => {
                     if (snapshot.exists()) {
                         const data = snapshot.data() as BikeRack;
-                        this.panToRackWithOffset(data);
                         return {
                             id: snapshot.id,
                             ...data,
                         };
                     } else {
-                        if (this.getCenterParam()) this.clearRack();
                         return null;
+                    }
+                }),
+            )
+            .pipe(
+                tap((data) => {
+                    if (data) this.panToRackWithOffset(data);
+                    else {
+                        if (this.getCenterParam()) this.clearRack();
                     }
                 }),
             );
