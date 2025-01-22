@@ -1,26 +1,20 @@
-import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Observable, of} from "rxjs";
-import {BikeRack} from "../bike-racks";
-import {map, take} from "rxjs/operators";
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { Firestore, doc, docSnapshots } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
+import { BikeRack } from '../bike-racks';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class RackResolver implements Resolve<BikeRack> {
+export const rackResolver: ResolveFn<BikeRack> = (route) => {
+    const id = route.queryParamMap.get('rack_id');
+    if (!id) return null;
 
-    constructor(private store: AngularFirestore) { }
+    const firestore = inject(Firestore);
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<BikeRack> {
-        const id = route.queryParamMap.get('rack_id');
-        if(id) {
-            return this.store
-                .doc<BikeRack>(`/racks/${id}`)
-                .snapshotChanges()
-                .pipe(map(snapshot => snapshot.payload.exists ? snapshot.payload.data() : null))
-                .pipe(take(1));
-        }
-        else return of(null);
-    }
-}
+    const docRef = doc(firestore, 'racks', id);
+
+    return docSnapshots(docRef).pipe(
+        map((snapshot) => {
+            return snapshot.exists() ? (snapshot.data() as BikeRack) : null;
+        }),
+    );
+};

@@ -1,4 +1,8 @@
 <div *ngIf="rack" class="form-container">
-    <h1>Редагування: {{rack.title || rack.street_address || rack.id}}</h1>
-    <app-bike-rack-form [rack]="rack" (save)="save($event)" (cancel)="back()"></app-bike-rack-form>
+    <h1>Редагування: {{ rack.title || rack.street_address || rack.id }}</h1>
+    <app-bike-rack-form
+        [rack]="rack"
+        (save)="save($event)"
+        (exitEditing)="back()"
+    ></app-bike-rack-form>
 </div>

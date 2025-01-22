@@ -1,27 +1,78 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {GoogleMap} from "@angular/google-maps";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSelectionListChange} from "@angular/material/list";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {AngularFirestore, CollectionReference, Query, QueryFn} from "@angular/fire/firestore";
-import {BehaviorSubject, Observable} from "rxjs";
-import {debounceTime, map, shareReplay, switchMap} from 'rxjs/operators';
-import {BikeRack} from "../bike-rack";
-import {AuthService} from "../../auth/auth.service";
-import {GeoService, MarkerOptionsSet, MarkersService, RackHint} from "../../services";
-import {FilterSettings} from "../settings";
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    DestroyRef,
+    inject,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { GoogleMap, MapMarker } from '@angular/google-maps';
+import {
+    MatDialog,
+    MatDialogClose,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {
+    Firestore,
+    doc,
+    deleteDoc,
+    collection,
+    query,
+    where,
+    QueryConstraint,
+    collectionData,
+    docSnapshots,
+} from '@angular/fire/firestore';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { BikeRack } from '../bike-rack';
+import {
+    GeoService,
+    MarkerOptionsSet,
+    MarkersService,
+    AuthService,
+} from '../../services';
+import { FilterSettings } from '../settings';
+import { RackCardComponent } from '../rack-card/rack-card.component';
 
 const settingsKey: string = 'racks_settings';
 
 @Component({
     selector: 'app-racks-page',
     templateUrl: './racks-page.component.html',
-    styleUrls: ['./racks-page.component.styl'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./racks-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatDialogClose,
+        MatDialogActions,
+        MatDialogContent,
+        MatDialogTitle,
+        MatListModule,
+        MatIconModule,
+        MatButton,
+        RackCardComponent,
+        GoogleMap,
+        MapMarker,
+        MatMiniFabButton,
+        NgIf,
+        AsyncPipe,
+        NgForOf,
+    ],
 })
 export class RacksPageComponent implements OnInit, AfterViewInit {
-
     userPosition: GeolocationPosition;
     zoom: number = 16;
 
@@ -33,27 +84,28 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     isLoggedIn: Observable<boolean>;
     isEditor: Observable<boolean>;
     isAdmin: Observable<boolean>;
-    hints: Observable<RackHint[]>;
 
     settings: FilterSettings;
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
+    @ViewChild('settingsDialogContent') settingsDialogContent: TemplateRef<any>;
 
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
     private readonly locationZoom = 18;
     private settingsChange: BehaviorSubject<FilterSettings>;
+    private db = inject(Firestore);
+    private snackBar = inject(MatSnackBar);
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private auth: AuthService,
-        private store: AngularFirestore,
         private geoService: GeoService,
         private router: Router,
         private route: ActivatedRoute,
         private markersService: MarkersService,
         private dialog: MatDialog,
-        private snackBar: MatSnackBar,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
     ) {
         this.mapOptions = {
             center: GeoService.KyivCenterCoords,
@@ -61,32 +113,37 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             maxZoom: this.maxZoom,
             streetViewControl: false,
             fullscreenControl: false,
-            panControl: false,
             mapTypeControl: false,
             zoomControl: false,
             rotateControl: true,
-            clickableIcons: false
+            clickableIcons: false,
         };
         this.initSettings();
+        this.initMenu();
 
-        this.racks = this.settingsChange
-            .pipe(debounceTime(500))
-            .pipe(switchMap(settings => {
-                const queryFn: QueryFn = ref => {
-                    let query: Query | CollectionReference = ref;
-                    if(!settings.private) query = query.where('is_private', '==', false);
-                    if(!settings.small) query = query.where('capacity', '>=', 6);
-                    if(!settings.allDesigns) query = query.where('is_sheffield', '==', true);
-                    return query;
-                };
-                return this.store
-                    .collection<BikeRack>('/racks', queryFn)
-                    .valueChanges({idField: 'id'})
-                    .pipe(shareReplay(1));
-            }));
+        const itemsRef = collection(this.db, 'racks').withConverter<BikeRack>({
+            fromFirestore: (snapshot) => snapshot.data() as BikeRack,
+            toFirestore: (item: any) => item,
+        });
+
+        this.racks = this.settingsChange.pipe(debounceTime(500)).pipe(
+            switchMap((settings) => {
+                const constraints: QueryConstraint[] = [];
+                if (!settings.private)
+                    constraints.push(where('is_private', '==', false));
+                if (!settings.small)
+                    constraints.push(where('capacity', '>=', 6));
+                if (!settings.allDesigns)
+                    constraints.push(where('is_sheffield', '==', true));
+
+                const bikeRacksQuery = query(itemsRef, ...constraints);
+                return collectionData(bikeRacksQuery, { idField: 'id' }).pipe(
+                    shareReplay(1),
+                );
+            }),
+        );
 
         this.markerOptions = this.markersService.options();
-        this.hints = this.markersService.getHints();
         this.isLoggedIn = this.auth.isAuthenticated();
         this.isEditor = this.auth.isEditor();
         this.isAdmin = this.auth.isAdmin();
@@ -95,42 +152,54 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         const id = this.route.snapshot.queryParamMap.get('rack_id');
         const center = this.getCenterParam();
-        if(!id && center) {
-            const coords = center.split(',').map(value => Number(value));
+        if (!id && center) {
+            const coords = center.split(',').map((value) => Number(value));
             this.mapOptions.center = {
                 lat: coords[0],
-                lng: coords[1]
-            }
+                lng: coords[1],
+            };
         }
     }
 
     ngAfterViewInit(): void {
+        const selectedRackDoc = this.route.queryParamMap
+            .pipe(map((paramMap) => paramMap.get('rack_id')))
+            .pipe(
+                switchMap((id) => {
+                    const docRef = doc(this.db, `racks/${id}`);
+                    return docSnapshots(docRef);
+                }),
+            );
 
-        this.selectedRack = this.route.queryParamMap
-            .pipe(map(paramMap => paramMap.get('rack_id')))
-            .pipe(switchMap(id => this.store.doc<BikeRack>(`/racks/${id}`).snapshotChanges()))
-            .pipe(map(snapshot => {
-                const payload = snapshot.payload;
-                if(payload.exists)  {
-                    this.panToRackWithOffset(payload.data());
-                    return {
-                        id: payload.id,
-                        ...payload.data()
-                    };
-                }
-                else {
-                    if(this.getCenterParam()) this.clearRack();
-                    return null;
-                }
-            }));
-
+        this.selectedRack = selectedRackDoc
+            .pipe(
+                map((snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.data() as BikeRack;
+                        return {
+                            id: snapshot.id,
+                            ...data,
+                        };
+                    } else {
+                        return null;
+                    }
+                }),
+            )
+            .pipe(
+                tap((data) => {
+                    if (data) this.panToRackWithOffset(data);
+                    else {
+                        if (this.getCenterParam()) this.clearRack();
+                    }
+                }),
+            );
     }
 
     centerMapToUserPosition(): void {
-        const onSuccess = position => {
+        const onSuccess = (position) => {
             this.mapRef.panTo({
                 lat: position.coords.latitude,
-                lng: position.coords.longitude
+                lng: position.coords.longitude,
             });
             this.mapRef.zoom = this.locationZoom;
             this.userPosition = position;
@@ -149,19 +218,19 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     onRackSelect(rack: BikeRack): void {
         this.router.navigate(['.'], {
             relativeTo: this.route,
-            queryParams: {rack_id: rack.id},
+            queryParams: { rack_id: rack.id },
             state: {
-                title: rack.title || rack.owner_name || rack.street_address
-            }
+                title: rack.title || rack.owner_name || rack.street_address,
+            },
         });
     }
 
-    clearRack(event?: google.maps.MouseEvent| google.maps.IconMouseEvent): void {
+    clearRack(): void {
         this.router.navigate(['.'], {
             relativeTo: this.route,
             state: {
-                title: ''
-            }
+                title: '',
+            },
         });
     }
 
@@ -170,21 +239,28 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     }
 
     logout(): void {
-        this.auth.logout().then(() => this.mapRef.panTo({lat: GeoService.KyivCenterCoords.lat, lng: GeoService.KyivCenterCoords.lng}));
+        this.auth.logout().then(() =>
+            this.mapRef.panTo({
+                lat: GeoService.KyivCenterCoords.lat,
+                lng: GeoService.KyivCenterCoords.lng,
+            }),
+        );
     }
 
     openSettings(template: TemplateRef<any>): void {
         this.dialog.open(template, {
             maxWidth: '90vw',
             maxHeight: '90vh',
-            autoFocus: false
+            autoFocus: false,
         });
     }
 
     onSettingsChange(event: MatSelectionListChange): void {
-        const enabledKeys: string[] = event.source.selectedOptions.selected.map(option => option.value);
+        const enabledKeys: string[] = event.source.selectedOptions.selected.map(
+            (option) => option.value,
+        );
 
-        Object.keys(this.settings).forEach(key => {
+        Object.keys(this.settings).forEach((key) => {
             this.settings[key] = enabledKeys.includes(key);
         });
         localStorage.setItem(settingsKey, JSON.stringify(this.settings));
@@ -194,21 +270,21 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     openConfirmation(template: TemplateRef<any>, rack: BikeRack): void {
         this.dialog.open(template, {
             data: rack,
-            autoFocus: false
+            autoFocus: false,
         });
     }
 
     deleteRack(id: string): void {
-        this.store
-            .collection('racks/')
-            .doc(id)
-            .delete()
+        const docRef = doc(this.db, 'racks', id);
+        deleteDoc(docRef)
             .then(() => {
                 this.dialog.closeAll();
                 this.clearRack();
-                this.snackBar.open('Велопарковку видалено', 'OK', {duration: 3000});
+                this.snackBar.open('Велопарковку видалено', 'OK', {
+                    duration: 3000,
+                });
             })
-            .catch(error => this.snackBar.open(error.message, 'OK'));
+            .catch((error) => this.snackBar.open(error.message, 'OK'));
     }
 
     trackByRackId(index: number, item: BikeRack) {
@@ -223,8 +299,27 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         return this.markersService.getRackMarker(type, size, state);
     }
 
-    private panToRackWithOffset(rack: BikeRack): void {
+    async initMenu() {
+        const viewContainerRef = inject(ViewContainerRef);
 
+        const MenuComponent = await import('../menu/menu.component').then(
+            (m) => m.MenuComponent,
+        );
+
+        const { instance } = viewContainerRef.createComponent(MenuComponent);
+
+        instance.settingsClicked
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.openSettings(this.settingsDialogContent);
+            });
+
+        instance.logout
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.logout());
+    }
+
+    private panToRackWithOffset(rack: BikeRack): void {
         // displays selected marker not in the map center but closer to top of the view
         // calculate 15vh from center of the screen
 
@@ -234,11 +329,11 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
 
         this.mapRef.panTo({
             lat: coords.latitude - offset,
-            lng: coords.longitude
-        })
+            lng: coords.longitude,
+        });
     }
 
-    private getCenterParam():string {
+    private getCenterParam(): string {
         return this.route.snapshot.queryParamMap.get('center');
     }
 
@@ -246,12 +341,13 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         const initial: FilterSettings = {
             private: false,
             small: true,
-            allDesigns: true
+            allDesigns: true,
         };
-        const saved: FilterSettings = JSON.parse(localStorage.getItem(settingsKey));
+        const saved: FilterSettings = JSON.parse(
+            localStorage.getItem(settingsKey),
+        );
 
         this.settings = saved || initial;
         this.settingsChange = new BehaviorSubject(this.settings);
     }
-
 }

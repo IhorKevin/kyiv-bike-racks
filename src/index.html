@@ -1,68 +1,199 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk-UA">
-<head>
-    <meta charset="utf-8">
-    <title>Велопарковки Києва</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="Велопарковки Києва">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://racks.u-cycle.org.ua/og-preview.jpg">
-    <meta property="og:image:alt" content="Центральна частина Києва, на якій розміщені чорні та сірі маркери велопарковок">
-    <meta property="og:description" content="Карта місць, де можна припаркувати велосипед у Києві">
-    <meta property="og:url" content="https://racks.u-cycle.org.ua">
-    <meta property="og:locale" content="uk_UA">
-    <meta property="og:site_name" content="U-Cycle">
-    <meta property="fb:app_id" content="3113871091966689">
-    <meta name="keywords" content="київ, велосипед, паркування, карта">
-    <meta name="description" content="Карта місць, де можна припаркувати велосипед у Києві. Велопарковки з фотографіями">
-    <meta name="robots" content="index, follow">
-    <link rel="preconnect" href="https://firebaseinstallations.googleapis.com" crossorigin="use-credentials">
-    <link rel="preconnect" href="https://maps.googleapis.com" crossorigin="use-credentials">
-    <link rel="preconnect" href="https://maps.gstatic.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin="use-credentials">
-    <link rel="preconnect" href="https://firebase.googleapis.com" crossorigin="use-credentials">
-    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="assets/icons/icon-apple-192x192.png">
-    <link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
-    <link rel="canonical" href="https://racks.u-cycle.org.ua">
-    <meta name="theme-color" content="#212121">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-    <app-root>
-        <h1 style="padding-top: 100vh">Карта велосипедних парковок Києва</h1>
-        <p>
-            На цій мапі позначені місця, облаштовані для паркування велосипедів.
-            Кожна локація містить фотографію, а також додаткову інформацію, наприклад, тип конструкції, кількість місць, власника, адресу тощо.
-        </p>
-        <p>
-            За конструкцієї велопарковки поділені на два типи:
-        </p>
-        <ol type="I">
-            <li>П-подібні - класична будова, що дозволяє сперти ровер та охопити велозамком одразу і раму, і колесо. Відома як <span lang="en">Sheffield Bike Stand</span>;</li>
-            <li>інші - конструкції для фіксування одним колесом, спіральні, стовпчики, декоративні тощо.</li>
-        </ol>
-        <p>У столиці найчастіше є можливість припаркувати велосипед біля:</p>
-        <ul>
-            <li>мереж невеликих супермаркетів;</li>
-            <li>закладів харчування, як мереж піцерій, так і окремих приватних;</li>
-            <li>відділень деяких банків;</li>
-            <li>відділень сервісів доставки і пошти;</li>
-            <li>станцій метрополітену;</li>
-            <li>закладів освіти та гуртожитків;</li>
-            <li>установ муніципальної та державної влади;</li>
-            <li>офісних будівель, а також всередині деяких бізнес центрів.</li>
-        </ul>
-        <p>
-            Інформація зібрана командою проекту, учасниками спільноти <a href="https://u-cycle.org.ua/" target="_blank">U-Cycle - Асоціація велосипедистів Києва</a>,
-            опираючись на дані <a href="https://gis.kyivcity.gov.ua/" target="_blank">ІАС "Майно"</a> та надіслані через форму зворотного зв'язку.
-        </p>
-        <p>Які велосипедні стійки краще і чому можна дізнатись у документі <a href="https://issuu.com/kyivvelo/docs/avk_bike_parking__2017" target="_blank">Рекомендації з облаштування велопарковок</a>.</p>
-        <p>Для користування цією картою необіхдний сучасний браузер із увімкненим JavaScript.</p>
-    </app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbP5iLdeUARlMMLUaU9MNs6Tres9S6USA&language=uk&region=UA" defer></script>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <title>Велопарковки Києва</title>
+        <base href="/" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
+        />
+        <meta property="og:title" content="Велопарковки Києва" />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:image"
+            content="https://racks.u-cycle.org.ua/og-preview.jpg"
+        />
+        <meta
+            property="og:image:alt"
+            content="Центральна частина Києва, на якій розміщені чорні та сірі маркери велопарковок"
+        />
+        <meta
+            property="og:description"
+            content="Карта місць, де можна припаркувати велосипед у Києві"
+        />
+        <meta property="og:url" content="https://racks.u-cycle.org.ua" />
+        <meta property="og:locale" content="uk_UA" />
+        <meta property="og:site_name" content="U-Cycle" />
+        <meta property="fb:app_id" content="3113871091966689" />
+        <meta name="keywords" content="київ, велосипед, паркування, карта" />
+        <meta
+            name="description"
+            content="Карта місць, де можна припаркувати велосипед у Києві. Велопарковки з фотографіями"
+        />
+        <link
+            rel="preconnect"
+            href="https://firebaseinstallations.googleapis.com"
+            crossorigin="use-credentials"
+        />
+        <link
+            rel="preconnect"
+            href="https://maps.googleapis.com"
+            crossorigin="use-credentials"
+        />
+        <link
+            rel="preconnect"
+            href="https://maps.gstatic.com"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="preconnect"
+            href="https://firestore.googleapis.com"
+            crossorigin="use-credentials"
+        />
+        <link
+            rel="preconnect"
+            href="https://firebase.googleapis.com"
+            crossorigin="use-credentials"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="favicon-32x32.png"
+            sizes="32x32"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="assets/icons/icon-apple-192x192.png"
+        />
+        <link
+            rel="manifest"
+            href="manifest.webmanifest"
+            crossorigin="use-credentials"
+        />
+        <link rel="canonical" href="https://racks.u-cycle.org.ua" />
+        <meta name="theme-color" content="#212121" />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <app-root>
+            <h1 style="padding-top: 100vh">
+                Карта велосипедних парковок Києва
+            </h1>
+            <p>
+                На цій мапі позначені місця, облаштовані для паркування
+                велосипедів. Кожна локація містить фотографію, а також додаткову
+                інформацію, наприклад, тип конструкції, кількість місць,
+                власника, адресу тощо.
+            </p>
+            <p>За конструкцією велопарковки поділені на два типи:</p>
+            <ol type="I">
+                <li>
+                    П-подібні - класична будова, що дозволяє сперти ровер та
+                    охопити велозамком одразу і раму, і колесо. Відома як
+                    <span lang="en">Sheffield Bike Stand</span>;
+                </li>
+                <li>
+                    інші - конструкції для фіксування одним колесом, спіральні,
+                    стовпчики, декоративні тощо.
+                </li>
+            </ol>
+            <p>
+                У столиці найчастіше є можливість припаркувати велосипед біля:
+            </p>
+            <ul>
+                <li>мереж невеликих супермаркетів;</li>
+                <li>
+                    закладів харчування, як мереж піцерій, так і окремих
+                    приватних;
+                </li>
+                <li>відділень деяких банків;</li>
+                <li>відділень сервісів доставки і пошти;</li>
+                <li>станцій метрополітену;</li>
+                <li>закладів освіти та гуртожитків;</li>
+                <li>установ муніципальної та державної влади;</li>
+                <li>
+                    офісних будівель, а також всередині деяких бізнес центрів.
+                </li>
+            </ul>
+            <p>
+                Інформація зібрана командою проекту, учасниками спільноти
+                <a href="https://u-cycle.org.ua/" target="_blank"
+                    >U-Cycle - Асоціація велосипедистів Києва</a
+                >, опираючись на дані
+                <a href="https://gis.kyivcity.gov.ua/" target="_blank"
+                    >ІАС "Майно"</a
+                >
+                та надіслані через форму зворотного зв'язку.
+            </p>
+            <p>
+                Які велосипедні стійки краще і чому можна дізнатись у документі
+                <a
+                    href="https://issuu.com/kyivvelo/docs/avk_bike_parking__2017"
+                    target="_blank"
+                    >Рекомендації з облаштування велопарковок</a
+                >.
+            </p>
+        </app-root>
+        <noscript
+            >Please enable JavaScript to continue using this
+            application.</noscript
+        >
+        <script>
+            ((g) => {
+                var h,
+                    a,
+                    k,
+                    p = 'The Google Maps JavaScript API',
+                    c = 'google',
+                    l = 'importLibrary',
+                    q = '__ib__',
+                    m = document,
+                    b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}),
+                    r = new Set(),
+                    e = new URLSearchParams(),
+                    u = () =>
+                        h ||
+                        (h = new Promise(async (f, n) => {
+                            await (a = m.createElement('script'));
+                            e.set('libraries', [...r] + '');
+                            for (k in g)
+                                e.set(
+                                    k.replace(
+                                        /[A-Z]/g,
+                                        (t) => '_' + t[0].toLowerCase(),
+                                    ),
+                                    g[k],
+                                );
+                            e.set('callback', c + '.maps.' + q);
+                            a.src =
+                                `https://maps.${c}apis.com/maps/api/js?` + e;
+                            d[q] = f;
+                            a.onerror = () =>
+                                (h = n(Error(p + ' could not load.')));
+                            a.nonce =
+                                m.querySelector('script[nonce]')?.nonce || '';
+                            m.head.append(a);
+                        }));
+                d[l]
+                    ? console.warn(p + ' only loads once. Ignoring:', g)
+                    : (d[l] = (f, ...n) =>
+                          r.add(f) && u().then(() => d[l](f, ...n)));
+            })({
+                v: 'weekly',
+                key: 'AIzaSyBbP5iLdeUARlMMLUaU9MNs6Tres9S6USA',
+                language: 'uk',
+            });
+        </script>
+    </body>
 </html>

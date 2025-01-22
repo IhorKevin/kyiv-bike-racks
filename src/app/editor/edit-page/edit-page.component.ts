@@ -1,54 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import {AngularFirestore} from "@angular/fire/firestore";
-import {ActivatedRoute, Router} from "@angular/router";
-import {BikeRack} from "../../bike-racks";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import firebase from 'firebase/app';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
+import {
+    Firestore,
+    doc,
+    getDoc,
+    updateDoc,
+    FirestoreError,
+} from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BikeRack } from '../../bike-racks';
+import { BikeRackFormComponent } from '../bike-rack-form/bike-rack-form.component';
 
 @Component({
     selector: 'app-edit-page',
     templateUrl: './edit-page.component.html',
-    styleUrls: ['./edit-page.component.styl']
+    styleUrls: ['./edit-page.component.scss'],
+    imports: [BikeRackFormComponent, NgIf]
 })
 export class EditPageComponent implements OnInit {
-
     rack: BikeRack;
 
     constructor(
-        private store: AngularFirestore, 
-        private router: Router, 
-        private route: ActivatedRoute, 
-        private snackBar: MatSnackBar
-    ) { }
+        private db: Firestore,
+        private router: Router,
+        private route: ActivatedRoute,
+        private snackBar: MatSnackBar,
+    ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        this.store.doc<BikeRack>(`/racks/${id}`)
-            .valueChanges()
-            .subscribe(rack => {
-                this.rack = {
-                    id: id,
-                    ...rack
-                };
-            });
+        const docRef = doc(this.db, 'racks', id);
+        const snapshot = await getDoc(docRef);
+        const rack = snapshot.data() as BikeRack;
+        this.rack = {
+            id: id,
+            ...rack,
+        };
     }
 
     save(rack: BikeRack): void {
-        const center: string = [rack.coords.latitude, rack.coords.longitude].join(',');
-        this.store
-            .doc<BikeRack>(`/racks/${rack.id}`)
-            .update(rack)
+        const center: string = [
+            rack.coords.latitude,
+            rack.coords.longitude,
+        ].join(',');
+
+        const docRef = doc(this.db, 'racks', rack.id);
+
+        updateDoc(docRef, { ...rack })
             .then(() => {
-                this.snackBar.open('Велопарковку збережено', 'OK', {duration: 3000});
-                this.router.navigate(['/racks'], {queryParams: {center}});
+                this.snackBar.open('Велопарковку збережено', 'OK', {
+                    duration: 3000,
+                });
+                this.router.navigate(['/racks'], { queryParams: { center } });
             })
-            .catch((error: firebase.firestore.FirestoreError) => {
-                this.snackBar.open(error.message, 'OK', {duration: 3000});
-            })
+            .catch((error: FirestoreError) => {
+                this.snackBar.open(error.message, 'OK', { duration: 3000 });
+            });
     }
 
     back(): void {
-        this.router.navigate(['/racks'], {queryParams: {rack_id: this.rack.id}});
+        this.router.navigate(['/racks'], {
+            queryParams: { rack_id: this.rack.id },
+        });
     }
-
 }
