@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/kyiv-bike-racks",
+    "public": "dist/kyiv-bike-racks/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
