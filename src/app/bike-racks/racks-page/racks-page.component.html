@@ -28,38 +28,6 @@
     ></map-marker>
 </google-map>
 
-<button class="menu-button" mat-raised-button [matMenuTriggerFor]="menu">
-    <mat-icon>menu</mat-icon> Меню
-</button>
-<mat-menu #menu="matMenu">
-    <a
-        mat-menu-item
-        *ngIf="isEditor | async; else suggestLink"
-        routerLink="/editor/create"
-        >Додати велопарковку</a
-    >
-    <button
-        mat-menu-item
-        type="button"
-        (click)="openSettings(settingsDialogContent)"
-    >
-        Налаштування
-    </button>
-    <button
-        mat-menu-item
-        *ngIf="isLoggedIn | async"
-        type="button"
-        (click)="logout()"
-    >
-        Вийти
-    </button>
-</mat-menu>
-<ng-template #suggestLink>
-    <a mat-menu-item href="https://forms.gle/b1YSbj9nJgBUmuss9" target="_bank">
-        Відсутня на карті? <mat-icon>open_in_new</mat-icon>
-    </a>
-</ng-template>
-
 <button
     class="location-button"
     mat-mini-fab

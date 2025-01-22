@@ -3,12 +3,14 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     inject,
     OnInit,
     TemplateRef,
     ViewChild,
+    ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import {
@@ -20,7 +22,6 @@ import {
 } from '@angular/material/dialog';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -34,6 +35,7 @@ import {
     collectionData,
     docSnapshots,
 } from '@angular/fire/firestore';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { BikeRack } from '../bike-rack';
@@ -58,14 +60,12 @@ const settingsKey: string = 'racks_settings';
         MatDialogActions,
         MatDialogContent,
         MatDialogTitle,
-        MatMenuModule,
         MatListModule,
         MatIconModule,
         MatButton,
         RackCardComponent,
         GoogleMap,
         MapMarker,
-        RouterLink,
         MatMiniFabButton,
         NgIf,
         AsyncPipe,
@@ -88,6 +88,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     settings: FilterSettings;
 
     @ViewChild(GoogleMap) mapRef: GoogleMap;
+    @ViewChild('settingsDialogContent') settingsDialogContent: TemplateRef<any>;
 
     private readonly minZoom = 11;
     private readonly maxZoom = 19;
@@ -95,6 +96,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
     private settingsChange: BehaviorSubject<FilterSettings>;
     private db = inject(Firestore);
     private snackBar = inject(MatSnackBar);
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private auth: AuthService,
@@ -117,6 +119,7 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
             clickableIcons: false,
         };
         this.initSettings();
+        this.initMenu();
 
         const itemsRef = collection(this.db, 'racks').withConverter<BikeRack>({
             fromFirestore: (snapshot) => snapshot.data() as BikeRack,
@@ -294,6 +297,26 @@ export class RacksPageComponent implements OnInit, AfterViewInit {
         const size = currentZoom < this.zoom ? 'sm' : 'lg';
         const state = active ? 'active' : 'default';
         return this.markersService.getRackMarker(type, size, state);
+    }
+
+    async initMenu() {
+        const viewContainerRef = inject(ViewContainerRef);
+
+        const MenuComponent = await import('../menu/menu.component').then(
+            (m) => m.MenuComponent,
+        );
+
+        const { instance } = viewContainerRef.createComponent(MenuComponent);
+
+        instance.settingsClicked
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.openSettings(this.settingsDialogContent);
+            });
+
+        instance.logout
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.logout());
     }
 
     private panToRackWithOffset(rack: BikeRack): void {
