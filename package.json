@@ -1,6 +1,6 @@
 {
   "name": "kyiv-bike-racks",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": {
     "name": "Ihor Ivanov",
     "email": "ihorkevin@gmail.com",
@@ -26,7 +26,7 @@
     "@angular/common": "^19.1.1",
     "@angular/compiler": "^19.1.1",
     "@angular/core": "^19.1.1",
-    "@angular/fire": "~19.0.0",
+    "@angular/fire": "~19.2.0",
     "@angular/forms": "^19.1.1",
     "@angular/google-maps": "^19.1.0",
     "@angular/material": "^19.1.0",
